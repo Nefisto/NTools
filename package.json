@@ -1,0 +1,12 @@
+{
+  "name": "com.nefisto.ntools",
+  "version": "1.0.0",
+  "displayName": "NTools",
+  "description": "Personal custom made tools library",
+  "unity": "2020.3",
+  "documentationUrl": "https://example.com/",
+  "author": {
+    "name": "Nefisto",
+    "email": "joao.gavron@gmail.com"
+  }
+}
