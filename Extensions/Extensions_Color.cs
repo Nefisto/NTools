@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace NTools
 {
-    public partial class Extensions
+    public static partial class Extensions
     {
         public static bool CompareWithoutAlpha (this Color color, Color other)
             => Mathf.Abs(color.r - other.r) < 0.001f &&

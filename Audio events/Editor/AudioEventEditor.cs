@@ -1,8 +1,11 @@
 using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace NTools
 {
+#if UNITY_EDITOR
     [CustomEditor(typeof(AudioEvent), true)]
     public class AudioEventEditor : Editor
     {
@@ -34,5 +37,5 @@ namespace NTools
             EditorGUI.EndDisabledGroup();
         }
     }
-
+#endif
 }

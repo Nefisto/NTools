@@ -2,7 +2,7 @@
 
 namespace NTools
 {
-    public partial class Extensions
+    public static partial class Extensions
     {
         public static bool IsEmpty<T> (this IList<T> source)
             => source.Count == 0;

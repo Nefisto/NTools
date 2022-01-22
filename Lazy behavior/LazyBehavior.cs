@@ -1,5 +1,10 @@
+// ReSharper disable InconsistentNaming
+// When building compile thrown warning about the new keyword not being necessary, and this will be based if the field is used or not 
+#pragma warning disable 108,109, 114
+
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace NTools
@@ -55,6 +60,13 @@ namespace NTools
             ? _circleCollider2D
             : _circleCollider2D = GetComponentInChildren<CircleCollider2D>();
 
+        [NonSerialized]
+        private SphereCollider _sphereCollider;
+
+        public SphereCollider sphereCollider => _sphereCollider
+            ? _sphereCollider
+            : _sphereCollider = GetComponent<SphereCollider>();
+        
         #endregion
 
         #region UI
@@ -77,5 +89,19 @@ namespace NTools
         public Text text => _text ? _text : _text = GetComponent<Text>();
 
         #endregion
+        
+        [NonSerialized]
+        private Renderer _renderer;
+        public new Renderer renderer => _renderer ? _renderer : _renderer = GetComponent<Renderer>();
+        
+        [NonSerialized]
+        private Light _light;
+        public new Light light => _light ? _light : _light = GetComponent<Light>();
+
+        [NonSerialized]
+        private NavMeshAgent _navMeshAgent;
+        public NavMeshAgent navMeshAgent => _navMeshAgent
+            ? _navMeshAgent
+            : _navMeshAgent = GetComponent<NavMeshAgent>();
     }
 }
