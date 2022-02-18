@@ -1,6 +1,6 @@
 {
   "name": "com.nefisto.ntools",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "displayName": "NTools",
   "description": "Personal custom made tools library",
   "unity": "2020.3",
