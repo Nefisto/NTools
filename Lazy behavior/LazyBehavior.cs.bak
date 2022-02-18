@@ -28,13 +28,6 @@ namespace NTools
             ? _animator
             : _animator = GetComponent<Animator>();
 
-		[NonSerialized]
-        private RectTransform _rectTransform;
-
-        public RectTransform rectTransform => _rectTransform
-            ? _rectTransform
-            : _rectTransform = GetComponent<RectTransform>();
-			
         #endregion
 
         #region Physics

@@ -9,7 +9,7 @@ namespace NTools
         /// </summary>
         /// <param name="vector2"></param>
         /// <returns></returns>
-        public static float GetRandom (this Vector2 vector2)
+        public static float NTGetRandom (this Vector2 vector2)
             => Random.Range(vector2.x, vector2.y); 
         
         public static Vector2Int ToVector2Int (this Vector2 vector2)

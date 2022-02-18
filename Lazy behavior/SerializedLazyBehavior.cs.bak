@@ -34,7 +34,6 @@ public class SerializedLazyBehavior : SerializedMonoBehaviour
         public RectTransform rectTransform => _rectTransform
             ? _rectTransform
             : _rectTransform = GetComponent<RectTransform>();
-			
     #endregion
 
     #region Physics

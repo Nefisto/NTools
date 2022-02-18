@@ -6,12 +6,12 @@ namespace NTools
 {
     public static partial class Extensions
     {
-        public static T GetRandom<T> (this IEnumerable<T> source)
+        public static T NTGetRandom<T> (this IEnumerable<T> source)
         {
-            return source.GetRandom(1).FirstOrDefault();
+            return source.NTGetRandom(1).FirstOrDefault();
         }
 
-        public static IEnumerable<T> GetRandom<T> (this IEnumerable<T> source, int count)
+        public static IEnumerable<T> NTGetRandom<T> (this IEnumerable<T> source, int count)
         {
             return source.Shuffle().Take(count);
         }
