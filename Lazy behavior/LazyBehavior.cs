@@ -5,6 +5,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace NTools
@@ -110,5 +111,16 @@ namespace NTools
         public NavMeshAgent navMeshAgent => _navMeshAgent
             ? _navMeshAgent
             : _navMeshAgent = GetComponent<NavMeshAgent>();
+
+        #region Event system
+
+        [NonSerialized]
+        private EventTrigger _eventTrigger;
+
+        public EventTrigger eventTrigger => _eventTrigger
+            ? _eventTrigger
+            : _eventTrigger = GetComponent<EventTrigger>();
+
+        #endregion
     }
 }

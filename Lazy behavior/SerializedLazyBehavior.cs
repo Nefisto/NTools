@@ -6,6 +6,7 @@ using System;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // TODO: Pass this to a ODIN module
@@ -110,4 +111,15 @@ public class SerializedLazyBehavior : SerializedMonoBehaviour
     public NavMeshAgent navMeshAgent => _navMeshAgent
         ? _navMeshAgent
         : _navMeshAgent = GetComponent<NavMeshAgent>();
+    
+    #region Event system
+
+    [NonSerialized]
+    private EventTrigger _eventTrigger;
+
+    public EventTrigger eventTrigger => _eventTrigger
+        ? _eventTrigger
+        : _eventTrigger = GetComponent<EventTrigger>();
+
+    #endregion
 }
