@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 
-public static partial class Extensions
+namespace NTools
 {
-    public static Vector3 NRandomizePosition (this BoxCollider collider)
+    public static partial class Extensions
     {
-        var boundary = collider.bounds;
+        public static Vector3 NRandomizePosition (this BoxCollider collider)
+        {
+            var boundary = collider.bounds;
 
-        var randomizedX = Random.Range(boundary.min.x, boundary.max.x);
-        var randomizedY = Random.Range(boundary.min.y, boundary.max.y);
-        var randomizedZ = Random.Range(boundary.min.z, boundary.max.z);
+            var randomizedX = Random.Range(boundary.min.x, boundary.max.x);
+            var randomizedY = Random.Range(boundary.min.y, boundary.max.y);
+            var randomizedZ = Random.Range(boundary.min.z, boundary.max.z);
 
-        return new Vector3(randomizedX, randomizedY, randomizedZ);
+            return new Vector3(randomizedX, randomizedY, randomizedZ);
+        }
     }
 }

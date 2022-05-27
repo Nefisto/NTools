@@ -1,31 +1,34 @@
 ﻿using System;
 using UnityEngine;
 
-/// <summary>
-/// Will act similar to the WaitForSeconds BUT will pass the amount of time passed until started
-/// </summary>
-public class NTWaitForSecondsActioningUntil : CustomYieldInstruction
+namespace NTools
 {
-    private float timer = 0f;
-    private float counter = 0f;
-    
-    private Action<float> action;
-    
-    public NTWaitForSecondsActioningUntil(float seconds, Action<float> action)
+    /// <summary>
+    /// Will act similar to the WaitForSeconds BUT will pass the amount of time passed until started
+    /// </summary>
+    public class NTWaitForSecondsActioningUntil : CustomYieldInstruction
     {
-        timer = seconds;
-        this.action = action;
-    }
+        private float timer = 0f;
+        private float counter = 0f;
 
-    public override bool keepWaiting
-    {
-        get
+        private Action<float> action;
+
+        public NTWaitForSecondsActioningUntil (float seconds, Action<float> action)
         {
-            counter += Time.deltaTime;
+            timer = seconds;
+            this.action = action;
+        }
 
-            action?.Invoke(counter);
-            
-            return !(counter >= timer);
+        public override bool keepWaiting
+        {
+            get
+            {
+                counter += Time.deltaTime;
+
+                action?.Invoke(counter);
+
+                return !(counter >= timer);
+            }
         }
     }
 }

@@ -1,29 +1,34 @@
 ﻿using NTools;
 using UnityEngine;
 
-/// <summary>
-/// Lazy approach to create a singleton in a Dont Destroy on Load
-/// </summary>
-public class PersistentLazySingletonMonoBehaviour<T> : LazyBehavior
-    where T : Component
+namespace NTools
 {
-    protected static T instance { get; set; }
+    
 
-    public static T Instance
+    /// <summary>
+    /// Lazy approach to create a singleton in a Dont Destroy on Load
+    /// </summary>
+    public class PersistentLazySingletonMonoBehaviour<T> : LazyBehavior
+        where T : Component
     {
-        get
+        protected static T instance { get; set; }
+
+        public static T Instance
         {
-            if (instance == null)
-                CreatePersistentObject();
+            get
+            {
+                if (instance == null)
+                    CreatePersistentObject();
 
-            return instance;
+                return instance;
+            }
         }
-    }
 
-    private static void CreatePersistentObject()
-    {
-        var go = new GameObject(typeof(T).ToString());
-        instance = go.AddComponent<T>();
-        DontDestroyOnLoad(go);
+        private static void CreatePersistentObject()
+        {
+            var go = new GameObject(typeof(T).ToString());
+            instance = go.AddComponent<T>();
+            DontDestroyOnLoad(go);
+        }
     }
 }
