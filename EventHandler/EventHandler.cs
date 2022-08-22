@@ -12,14 +12,5 @@ namespace NTools
 
         private static readonly Dictionary<object, Dictionary<string, List<InvokableActionBase>>> eventTable =
             new Dictionary<object, Dictionary<string, List<InvokableActionBase>>>();
-
-        public static void CleanEvents()
-        {
-            globalEventTable.Clear();
-
-            foreach (var (_, dictionary) in eventTable)
-                dictionary.Clear();
-            eventTable.Clear();
-        }
     }
 }
