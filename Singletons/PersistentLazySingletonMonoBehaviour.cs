@@ -8,7 +8,7 @@ namespace NTools
     /// <summary>
     /// Lazy approach to create a singleton in a Dont Destroy on Load
     /// </summary>
-    public class PersistentLazySingletonMonoBehaviour<T> : LazyBehavior
+    public class PersistentLazyMonoSingletonMonoBehaviour<T> : LazyMonoBehaviour
         where T : Component
     {
         protected static T instance { get; set; }

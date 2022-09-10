@@ -2,7 +2,7 @@
 
 namespace NTools
 {
-    public class RuntimeItem : LazyBehavior
+    public class RuntimeItem : LazyMonoBehaviour
     {
         public RuntimeSet runtimeSet;
 

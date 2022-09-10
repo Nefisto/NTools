@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NTools
 {
-    public abstract class SingletonMonoBehaviour<T> : LazyBehavior
+    public abstract class SingletonMonoBehaviour<T> : LazyMonoBehaviour
         where T : Component
     {
         public static T Instance { get; protected set; }

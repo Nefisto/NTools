@@ -1,5 +1,6 @@
 // ReSharper disable InconsistentNaming
 // When building compile thrown warning about the new keyword not being necessary, and this will be based if the field is used or not 
+
 #pragma warning disable 108,109, 114
 
 using System;
@@ -10,8 +11,24 @@ using UnityEngine.UI;
 
 namespace NTools
 {
-    public abstract class LazyBehavior : MonoBehaviour
+    public abstract class LazyMonoBehaviour : MonoBehaviour
     {
+        [NonSerialized]
+        private Light _light;
+
+        [NonSerialized]
+        private NavMeshAgent _navMeshAgent;
+
+        [NonSerialized]
+        private Renderer _renderer;
+
+        public new Renderer renderer => _renderer ? _renderer : _renderer = GetComponent<Renderer>();
+        public new Light light => _light ? _light : _light = GetComponent<Light>();
+
+        public NavMeshAgent navMeshAgent => _navMeshAgent
+            ? _navMeshAgent
+            : _navMeshAgent = GetComponent<NavMeshAgent>();
+
         #region Basic
 
         [NonSerialized]
@@ -29,13 +46,13 @@ namespace NTools
             ? _animator
             : _animator = GetComponent<Animator>();
 
-		[NonSerialized]
+        [NonSerialized]
         private RectTransform _rectTransform;
 
         public RectTransform rectTransform => _rectTransform
             ? _rectTransform
             : _rectTransform = GetComponent<RectTransform>();
-			
+
         #endregion
 
         #region Physics
@@ -74,7 +91,7 @@ namespace NTools
         public SphereCollider sphereCollider => _sphereCollider
             ? _sphereCollider
             : _sphereCollider = GetComponent<SphereCollider>();
-        
+
         #endregion
 
         #region UI
@@ -97,20 +114,6 @@ namespace NTools
         public Text text => _text ? _text : _text = GetComponent<Text>();
 
         #endregion
-        
-        [NonSerialized]
-        private Renderer _renderer;
-        public new Renderer renderer => _renderer ? _renderer : _renderer = GetComponent<Renderer>();
-        
-        [NonSerialized]
-        private Light _light;
-        public new Light light => _light ? _light : _light = GetComponent<Light>();
-
-        [NonSerialized]
-        private NavMeshAgent _navMeshAgent;
-        public NavMeshAgent navMeshAgent => _navMeshAgent
-            ? _navMeshAgent
-            : _navMeshAgent = GetComponent<NavMeshAgent>();
 
         #region Event system
 
@@ -123,4 +126,6 @@ namespace NTools
 
         #endregion
     }
+
+    // TODO: Pass this to a ODIN module
 }
