@@ -17,5 +17,8 @@ namespace NTools
 
         public static float ToDegreeAngle (this Vector2 vector)
             => Mathf.Atan2(vector.y, vector.x) * Mathf.Rad2Deg;
+
+        public static bool IsNearlyEnoughTo (this Vector2 vector, Vector2 other)
+            => vector.x.IsNearlyEnoughTo(other.x) && vector.y.IsNearlyEnoughTo(other.y);
     }
 }
