@@ -6,14 +6,14 @@ namespace NTools
     /// <summary>
     /// Will act similar to the WaitForSeconds BUT will pass the amount of time passed until started
     /// </summary>
-    public class NTWaitForSecondsActioningUntil : CustomYieldInstruction
+    public class WaitForSecondsActioningUntil : CustomYieldInstruction
     {
         private float timer = 0f;
         private float counter = 0f;
 
         private Action<float> action;
 
-        public NTWaitForSecondsActioningUntil (float seconds, Action<float> action)
+        public WaitForSecondsActioningUntil (float seconds, Action<float> action)
         {
             timer = seconds;
             this.action = action;
