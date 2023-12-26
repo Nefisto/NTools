@@ -8,9 +8,9 @@ namespace NTools
 {
     public static partial class Extensions
     {
-        public static Task SetDestinationWithEndCallback (this NavMeshAgent nav, Vector3 targetPosition, Action OnComplete)
+        public static NTask SetDestinationWithEndCallback (this NavMeshAgent nav, Vector3 targetPosition, Action OnComplete)
         {
-            return new Task(Set());
+            return new NTask(Set());
 
             IEnumerator Set()
             {
@@ -25,9 +25,9 @@ namespace NTools
             }
         }
 
-        public static Task SetPathWithEndCallback (this NavMeshAgent nav, NavMeshPath path, Action OnComplete)
+        public static NTask SetPathWithEndCallback (this NavMeshAgent nav, NavMeshPath path, Action OnComplete)
         {
-            return new Task(Set());
+            return new NTask(Set());
 
             IEnumerator Set()
             {

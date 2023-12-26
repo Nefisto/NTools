@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections;
 
-public class Task
+public class NTask
 {
     private bool isPaused;
     private bool isStopped;
-    private readonly TaskManager.TaskState task;
+    private readonly NTaskManager.TaskState task;
 
-    public Task (IEnumerator initialRoutine, bool autoStart = true)
+    public NTask (IEnumerator initialRoutine, bool autoStart = true)
     {
-        task = TaskManager.CreateTask(initialRoutine);
+        task = NTaskManager.CreateTask(initialRoutine);
         task.OnFinished += TaskFinished;
         
         if (autoStart)

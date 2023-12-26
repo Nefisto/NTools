@@ -5,16 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TaskManager : MonoBehaviour
+public class NTaskManager : MonoBehaviour
 {
-    private static TaskManager singleton;
+    private static NTaskManager singleton;
 
     public static TaskState CreateTask (IEnumerator routine)
     {
         if (singleton != null)
             return new TaskState(routine);
 
-        singleton = new GameObject("Task manager").AddComponent<TaskManager>();
+        singleton = new GameObject("Task manager").AddComponent<NTaskManager>();
         return new TaskState(routine);
     }
     
