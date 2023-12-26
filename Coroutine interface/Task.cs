@@ -35,4 +35,6 @@ public class Task
 
     public void Unpause()
         => task.IsPaused = false;
+
+    public void MoveNext() => task.MoveNext();
 }

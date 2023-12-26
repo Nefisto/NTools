@@ -77,5 +77,29 @@ public class TaskManager : MonoBehaviour
 
             OnFinished?.Invoke(IsStopped);
         }
+
+        public void MoveNext()
+        {
+            if (routinesStack.Count == 0)
+                return;
+            
+            var e = routinesStack.Peek();
+                
+            if (e != null && e.MoveNext())
+            {
+                while (e.Current is IEnumerator current)
+                {
+                    routinesStack.Push(current);
+                    e = routinesStack.Peek();
+
+                    e.MoveNext();
+                }
+            }
+            else
+            {
+                routinesStack.Pop();
+                MoveNext();
+            }
+        }
     }
 }
