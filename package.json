@@ -1,10 +1,9 @@
 {
   "name": "com.nefisto.ntools",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "displayName": "NTools",
   "description": "Personal custom made tools library",
-  "unity": "2021.3",
-  "documentationUrl": "https://example.com/",
+  "unity": "2022.3",
   "author": {
     "name": "Nefisto",
     "email": "joao.gavron@gmail.com"

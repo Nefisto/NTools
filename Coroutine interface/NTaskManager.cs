@@ -66,12 +66,18 @@ public class NTaskManager : MonoBehaviour
                         e = routinesStack.Peek();
                     }
 
-                    yield return e.Current;
+                    while (e.MoveNext())
+                    {
+                        yield return e.Current;
+                    }
                 }
                 else
                 {
                     e = routinesStack.Pop();
-                    yield return e.Current;
+                    while (e.MoveNext())
+                    {
+                        yield return e.Current;
+                    }
                 }
             }
 
