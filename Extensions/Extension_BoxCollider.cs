@@ -4,7 +4,7 @@ namespace NTools
 {
     public static partial class Extensions
     {
-        public static Vector3 NRandomizePosition (this BoxCollider collider)
+        public static Vector3 RandomizePosition (this BoxCollider collider)
         {
             var boundary = collider.bounds;
 
