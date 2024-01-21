@@ -17,4 +17,18 @@ public partial class NTaskTests
         
         Assert.AreEqual(counterAfterPaused, counter);
     }
+    
+    [UnityTest]
+    public IEnumerator UnpauseIsWorking()
+    {
+        var task = new NTask(CountingRoutine());
+        yield return new WaitForSeconds(Random.Range(.1f, .3f));
+        task.Pause();
+        yield return null;
+        var counterAfterPaused = counter;
+        task.Unpause();
+        yield return new WaitForSeconds(Random.Range(.1f, .3f));
+        
+        Assert.AreNotEqual(counterAfterPaused, counter);
+    }
 }
