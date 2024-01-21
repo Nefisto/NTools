@@ -3,7 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 
-public class NTaskTests
+public partial class NTaskTests
 {
     [UnityTest]
     public IEnumerator RoutineThatJustBreaksShouldFinishOnTheSameFrameThatItsStarted()
@@ -49,15 +49,5 @@ public class NTaskTests
             yield return RoutineThatTakesOneFrame();
             yield return RoutineThatBreaks();
         }
-    }
-    
-    private IEnumerator RoutineThatBreaks()
-    {
-        yield break;
-    }
-
-    private IEnumerator RoutineThatTakesOneFrame()
-    {
-        yield return null;
     }
 }

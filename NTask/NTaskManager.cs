@@ -69,6 +69,9 @@ public class NTaskManager : MonoBehaviour
                     while (e.MoveNext())
                     {
                         yield return e.Current;
+                        
+                        while (IsPaused)
+                            yield return null;
                     }
                 }
                 else
@@ -77,6 +80,9 @@ public class NTaskManager : MonoBehaviour
                     while (e.MoveNext())
                     {
                         yield return e.Current;
+                        
+                        while (IsPaused)
+                            yield return null;
                     }
                 }
             }

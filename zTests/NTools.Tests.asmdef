@@ -1,5 +1,5 @@
 {
-    "name": "Gameplaytests",
+    "name": "NTools.Tests",
     "rootNamespace": "",
     "references": [
         "NTools",
