@@ -50,4 +50,28 @@ public partial class NTaskTests
             yield return RoutineThatBreaks();
         }
     }
+
+    [UnityTest]
+    public IEnumerator InnerRoutinesAreWaitingTheCorrectAmountOfFrames()
+    {
+        var endFrame = 0;
+        var task = new NTask(MyRoutine(), false);
+        task.OnFinished += _ => endFrame = Time.frameCount;
+
+        yield return null;
+        var initialFrame = Time.frameCount;
+        task.Start();
+        
+        yield return new WaitForSeconds(.5f);
+
+        Assert.AreEqual(4, endFrame - initialFrame);
+        
+        IEnumerator MyRoutine()
+        {
+            yield return RoutineThatBreaksYield1ThanBreaks();
+            yield return RoutineThatTakesOneFrame();
+            yield return RoutineThatBreaksYield1ThanBreaks();
+            yield return null;
+        }
+    }
 }

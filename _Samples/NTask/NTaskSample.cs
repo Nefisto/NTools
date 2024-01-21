@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 public class NTaskSample : MonoBehaviour
@@ -12,9 +13,11 @@ public class NTaskSample : MonoBehaviour
     
     public void Start()
     {
-        counterTask ??= new NTask(LayerARoutine());
+        counterTask ??= new NTask(LayerARoutine(), false);
     }
 
+    public void StartTask() => counterTask.Start(); 
+    
     public void Pause() => counterTask.Pause();
 
     public void Unpause() => counterTask.Unpause();
@@ -27,7 +30,7 @@ public class NTaskSample : MonoBehaviour
         while (true)
         {
             OnUpdatedLayerA?.Invoke(number);
-            yield return new WaitForSeconds(.5f);
+            // yield return new WaitForSeconds(.5f);
             yield return LayerBRoutine();
 
             number++;
@@ -40,7 +43,7 @@ public class NTaskSample : MonoBehaviour
         while (number < 4)
         {
             OnUpdatedLayerB?.Invoke(number);
-            yield return new WaitForSeconds(.5f);
+            // yield return new WaitForSeconds(.5f);
             yield return LayerCRoutine();
             
             number++;
@@ -54,7 +57,8 @@ public class NTaskSample : MonoBehaviour
         while (number < 6)
         {
             OnUpdatedLayerC?.Invoke(number);
-            yield return new WaitForSeconds(.5f);
+            // yield return new WaitForSeconds(.5f);
+            yield return null;
 
             number++;
         }

@@ -22,4 +22,11 @@ public partial class NTaskTests
     {
         yield return null;
     }
+
+    private IEnumerator RoutineThatBreaksYield1ThanBreaks()
+    {
+        yield return RoutineThatBreaks();
+        yield return RoutineThatTakesOneFrame();
+        yield return RoutineThatBreaks();
+    }
 }
