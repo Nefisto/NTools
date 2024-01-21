@@ -17,6 +17,8 @@ public class NTaskSample : MonoBehaviour
 
     public void Unpause() => counterTask.Unpause();
 
+    public void MoveOneStep() => counterTask.MoveNext();
+
     private IEnumerator MyCounterRoutine()
     {
         var number = 0;
