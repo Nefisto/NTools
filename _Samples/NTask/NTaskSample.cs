@@ -30,8 +30,8 @@ public class NTaskSample : MonoBehaviour
         while (true)
         {
             OnUpdatedLayerA?.Invoke(number);
-            yield return LayerBRoutine();
             yield return new WaitForSeconds(.5f);
+            yield return LayerBRoutine();
 
             number++;
         }
@@ -43,12 +43,11 @@ public class NTaskSample : MonoBehaviour
         while (number < 4)
         {
             OnUpdatedLayerB?.Invoke(number);
-            yield return LayerCRoutine();
             yield return new WaitForSeconds(.5f);
+            yield return LayerCRoutine();
             
             number++;
         }
-        OnUpdatedLayerB?.Invoke(0);
     }
 
     private static IEnumerator LayerCRoutine()
@@ -61,6 +60,5 @@ public class NTaskSample : MonoBehaviour
 
             number++;
         }
-        OnUpdatedLayerC?.Invoke(0);
     }
 }
