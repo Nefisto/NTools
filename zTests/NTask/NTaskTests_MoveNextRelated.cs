@@ -5,7 +5,7 @@ using UnityEngine.TestTools;
 
 public partial class NTaskTests
 {
-    private static int[] valuesForMoveNextIsWorking = new[] { 1, 3, 5 };
+    private static int[] valuesForMoveNextIsWorking = { 1, 3, 5 };
 
     [UnityTest]
     public IEnumerator MoveNextIsWorking ([ValueSource(nameof(valuesForMoveNextIsWorking))] int amountOfSteps)
@@ -19,9 +19,7 @@ public partial class NTaskTests
 
         var loopCounter = amountOfSteps;
         while (loopCounter-- > 0)
-        {
             task.MoveNext();
-        }
 
         Assert.AreEqual(counter, counterAfterPaused + amountOfSteps);
     }
