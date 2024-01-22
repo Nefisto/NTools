@@ -24,11 +24,7 @@ public class NTaskManager : MonoBehaviour
         
         private readonly Stack<IEnumerator> routinesStack = new();
 
-        public TaskState (IEnumerator initialRoutine)
-        {
-            initialRoutine.MoveNext();
-            routinesStack.Push(initialRoutine);
-        }
+        public TaskState (IEnumerator initialRoutine) => routinesStack.Push(initialRoutine);
 
         public bool IsRunning { get; set; }
         public bool IsPaused { get; set; }
@@ -45,59 +41,31 @@ public class NTaskManager : MonoBehaviour
             if (startOnNextFrame)
                 yield return null;
 
+            var e = routinesStack.Peek();
             while (IsRunning)
             {
-                if (routinesStack.Count == 0)
+                if (e.MoveNext())
                 {
-                    IsRunning = false;
-                    break;
-                }
-
-                var e = routinesStack.Peek();
-                
-                if (IsPaused)
-                {
-                    yield return null;
-                    continue;
-                }
-
-                while (e.Current is IEnumerator inner)
-                {
-                    // Inner routine has break
-                    if (!inner.MoveNext())
+                    if (e.Current is IEnumerator inner)
                     {
-                        if (!e.MoveNext())
-                        {
-                            _ = routinesStack.Pop();
-
-                            if (routinesStack.Count == 0)
-                            {
-                                OnFinished?.Invoke(IsStopped);
-                                yield break;
-                            }
-                            
-                            e = routinesStack.Peek();
-                        }
-
+                        routinesStack.Push(inner);
+                        e = routinesStack.Peek();
                         continue;
                     }
 
-                    routinesStack.Push(inner);
-                    e = inner;
-                }
-
-                do
-                {
-                    if (e.Current is IEnumerator)
-                        break;
-
-                    yield return e.Current;
-
                     while (IsPaused)
                         yield return null;
-                } while (e.MoveNext());
+                    
+                    yield return e.Current;
+                    
+                    continue;
+                }
 
-                _ = routinesStack.Pop();
+                routinesStack.Pop();
+                if (routinesStack.Count == 0)
+                    break;
+
+                e = routinesStack.Peek();
             }
 
             OnFinished?.Invoke(IsStopped);
@@ -127,12 +95,6 @@ public class NTaskManager : MonoBehaviour
                 routinesStack.Pop();
                 MoveNext();
             }
-        }
-
-        private bool TryMoveNext (IEnumerator routine, out bool hasMoved)
-        {
-            hasMoved = routine.MoveNext();
-            return hasMoved;
         }
     }
 }

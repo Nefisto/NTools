@@ -10,15 +10,27 @@ TODO DOC:
 ## How to use
 
 ```c#
-public class 
+var myTask = new NTask(MyRoutine);
 ```
 
 
 
+## Pause/Unpause
+
+```c#
+myTask.Pause(); // will halt it on the next yield
+...
+myTask.Unpause();
+```
+
+Note that pausing/unpausing will work with any level of nested routines, you can check it on NTask sample scene
+
+
+
 - NTask
-    - Pause/resume routine
     - Calling routine step-by-step with Move next
     - Yield break not use a frame
     - Yield return skip one frame
-
+    - ??Delay begin??
+    - Beggining on next frame??
 - NDictionary
