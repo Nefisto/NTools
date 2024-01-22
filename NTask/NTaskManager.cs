@@ -86,10 +86,7 @@ public class NTaskManager : MonoBehaviour
                 {
                     routinesStack.Push(current);
                     e = current;
-
-                    // Routine breaks
-                    if (!e.MoveNext())
-                        e = routinesStack.Pop();
+                    MoveNext();
                 }
             }
             else

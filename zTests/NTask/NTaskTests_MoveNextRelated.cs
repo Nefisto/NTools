@@ -23,4 +23,31 @@ public partial class NTaskTests
 
         Assert.AreEqual(counter, counterAfterPaused + amountOfSteps);
     }
+
+    [UnityTest]
+    public IEnumerator MoveNextSkipBreak()
+    {
+        var localCounter = 0;
+        var task = new NTask(MyMethod());
+        task.Pause();
+        yield return null;
+
+        var currentCounter = localCounter;
+        task.MoveNext();
+        task.MoveNext();
+        
+        Assert.AreEqual(currentCounter + 2, localCounter);
+        
+        IEnumerator MyMethod()
+        {
+            localCounter = 0;
+            while (true)
+            {
+                yield return RoutineThatBreaks();
+                yield return RoutineThatBreaks();
+                localCounter++;
+                yield return null;
+            }
+        }
+    }
 }
