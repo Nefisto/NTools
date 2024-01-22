@@ -52,11 +52,14 @@ public class NTaskManager : MonoBehaviour
                         e = routinesStack.Peek();
                         continue;
                     }
-
-                    while (IsPaused)
-                        yield return null;
                     
                     yield return e.Current;
+                    
+                    while (IsPaused)
+                        yield return null;
+
+                    // We could have moved the routine through MoveNext, so a Peek is necessary
+                    e = routinesStack.Peek();
                     
                     continue;
                 }
@@ -77,7 +80,6 @@ public class NTaskManager : MonoBehaviour
                 return;
             
             var e = routinesStack.Peek();
-                
             if (e != null && e.MoveNext())
             {
                 while (e.Current is IEnumerator current)

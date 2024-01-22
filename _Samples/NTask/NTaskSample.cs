@@ -13,7 +13,8 @@ public class NTaskSample : MonoBehaviour
     
     public void Start()
     {
-        counterTask ??= new NTask(LayerARoutine(), false);
+        counterTask?.Stop();
+        counterTask = new NTask(LayerARoutine());
     }
 
     public void StartTask() => counterTask.Start(); 
