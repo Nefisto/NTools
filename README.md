@@ -1,16 +1,14 @@
 ﻿# NTask
 
-​	It provides some useful API's to help you to manager your routines
+​	It provides some useful API's to help you to manager your routines. 
 
-## How to use
+### WHY:
 
-```c#
-...
-    var myTask = new NTask(MyRoutine);
-...
-```
+* `NTask` does not spend a frame when breaking
+* We can pause \o/
+* Can be moved step by step
 
-The main difference between starting coroutines with `NTask` OR `StartCoroutine()` is the frames spend on `yield break;` and `yield return null`, when you use `StartCoroutine()` either instruction will spend 1 frame, so the following code should use 3 frames
+​	The main difference between creating coroutines with `NTask` OR `StartCoroutine()` is the frames spend on `yield break;` and `yield return null`, when you use `StartCoroutine()` either instruction will spend 1 frame, so the following code should use 3 frames
 
 ```c#
 private IEnumerator MyRoutine()
@@ -23,9 +21,22 @@ private IEnumerator MyRoutine()
 private IEnumerator RoutineThatBreaks() { yield break; }
 ```
 
-But when `NTask` is managing your routine it will bypass `yield break;` instructions, so the same code should use 1 frame only, therefore is important to keep in mind that that you CANNOT PAUSE into `yield break` and also `MoveNext()` will not stop on it too, break instructions is like "run this all on the same frame". 
+If you create the routine using `NTask` it will consume `yield break;` instructions, so the same code will take 1 frame only to finish
 
-IMPORTANT: This kind of operation can be desired on some cases but it can also cause problem on others, take the following code as a sample, I'm exaggerating here but if all your routines breaks at some point your routine will just spend 1 frame on each when controlled by unity but it will thrown an *StackOverflow* when controlled by `Ntask`, as you can imagine, its works exactly like a loop without escape in a synchronized code
+```c#
+private IEnumerator MyRoutine()
+{
+    yield return RoutineThatBreaks(); // 0 frame
+    yield return null; // 1 frame
+    yield return RoutineThatBreaks(); // 0 frame
+}
+
+private IEnumerator RoutineThatBreaks() { yield break; }
+```
+
+Therefore is important to keep in mind that that you CANNOT PAUSE into `yield break` and also `MoveNext()` will not stop on it too, break instructions is like *"run this all on the same frame"*. 
+
+**IMPORTANT:** Internally I'm using recursion by design, if not routines that loop through other routines that just breaks can freeze your code, take the following code as a sample, I'm exaggerating here but if all your routines breaks at some point your routine will just spend 1 frame on each when controlled by unity but it will thrown an *StackOverflow* when controlled by `Ntask`
 
 ```c#
 private IEnumerator MyRoutine()
@@ -38,7 +49,22 @@ private IEnumerator MyRoutine()
 }
 ```
 
+## How to use
 
+​	The constructor has only two parameters, a required IEnumerator and an optional boolean to start right away or not
+
+```c#
+public NTask (IEnumerator initialRoutine, bool autoStart = true)
+```
+
+e.g.
+
+```c#
+...
+    var myTask = new NTask(MyRoutine); // Will start run code right away
+    var myPausedTask = new NTask(MyRoutine, false); // Will be on an idle state, an task.Start() need to be called
+...
+```
 
 ## Pause/Unpause
 
@@ -70,19 +96,16 @@ myTask.MoveNext();
   }
   ```
 
-  
 
 TODO FEAT:
 
 - Some simple way to work with Service Locator + Lazy behavior + NULL pattern
+- Cast items under mouse on scene, like PEEK does
+- Yielding for the NTask
 
 TODO DOC:
-
-
 
 - NTask
     - ??Delay begin??
     - Beggining on next frame??
-    - Yielding for the NTask
-    - What is the behavior of Unpausing/Pausing on the same frame?
 - NDictionary
