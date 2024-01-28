@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections;
+using UnityEngine;
 
 public class NTask : IEnumerable
 {
-    private bool isPaused;
-    private bool isStopped;
+    public bool IsRunning => task.IsRunning;
     private readonly NTaskManager.TaskState task;
 
     public NTask (IEnumerator initialRoutine, bool autoStart = true)

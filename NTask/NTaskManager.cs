@@ -65,18 +65,24 @@ public class NTaskManager : MonoBehaviour
 
                 routinesStack.Pop();
                 if (routinesStack.Count == 0)
-                    break;
+                {
+                    EndTask();
+                    continue;
+                }
 
                 e = routinesStack.Peek();
             }
-
+            
             OnFinished?.Invoke(IsStopped);
         }
 
         public void MoveNext()
         {
             if (routinesStack.Count == 0)
+            {
+                EndTask();
                 return;
+            }
 
             var e = routinesStack.Peek();
             if (e != null && e.MoveNext())
@@ -94,6 +100,8 @@ public class NTaskManager : MonoBehaviour
                 MoveNext();
             }
         }
+
+        private void EndTask() => IsRunning = false;
 
         public IEnumerator GetEnumerator()
         {
@@ -118,49 +126,6 @@ public class NTaskManager : MonoBehaviour
                 {
                     routinesStack.Pop();;
                 }
-            }
-        }
-
-        // public IEnumerator GetEnumerator() => new NTaskEnumerator(routinesStack);
-
-        private class NTaskEnumerator : IEnumerator 
-        {
-            private readonly Stack<IEnumerator> routinesStack;
-            
-            public NTaskEnumerator(Stack<IEnumerator> list)
-            {
-                routinesStack = list;
-            }
-
-            public bool MoveNext()
-            {
-                if (routinesStack.Count == 0)
-                    return false;
-
-                var e = routinesStack.Peek();
-                if (e != null && e.MoveNext())
-                {
-                    while (e.Current is IEnumerator current)
-                    {
-                        routinesStack.Push(current);
-                        return MoveNext();
-                    }
-                }
-                else
-                {
-                    routinesStack.Pop();
-                    return MoveNext();
-                }
-
-                return true;
-            }
-
-            public IEnumerator Current => routinesStack.Peek();
-            object IEnumerator.Current => routinesStack.Peek();
-
-            public void Reset()
-            {
-                
             }
         }
     }
