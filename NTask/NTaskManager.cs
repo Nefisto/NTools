@@ -17,11 +17,9 @@ public class NTaskManager : MonoBehaviour
         singleton = new GameObject("Task manager").AddComponent<NTaskManager>();
         return new TaskState(routine);
     }
-    
-    public class TaskState
+
+    public class TaskState : IEnumerable
     {
-        public event Action<bool> OnFinished;
-        
         private readonly Stack<IEnumerator> routinesStack = new();
 
         public TaskState (IEnumerator initialRoutine) => routinesStack.Push(initialRoutine);
@@ -29,6 +27,7 @@ public class NTaskManager : MonoBehaviour
         public bool IsRunning { get; set; }
         public bool IsPaused { get; set; }
         public bool IsStopped { get; set; }
+        public event Action<bool> OnFinished;
 
         public void Start (bool startOnNextFrame)
         {
@@ -52,15 +51,15 @@ public class NTaskManager : MonoBehaviour
                         e = routinesStack.Peek();
                         continue;
                     }
-                    
+
                     yield return e.Current;
-                    
+
                     while (IsPaused)
                         yield return null;
 
                     // We could have moved the routine through MoveNext, so a Peek is necessary
                     e = routinesStack.Peek();
-                    
+
                     continue;
                 }
 
@@ -78,7 +77,7 @@ public class NTaskManager : MonoBehaviour
         {
             if (routinesStack.Count == 0)
                 return;
-            
+
             var e = routinesStack.Peek();
             if (e != null && e.MoveNext())
             {
@@ -93,6 +92,75 @@ public class NTaskManager : MonoBehaviour
             {
                 routinesStack.Pop();
                 MoveNext();
+            }
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            while (true)
+            {
+                if (routinesStack.Count == 0)
+                    yield break;
+            
+                var e = routinesStack.Peek();
+                if (e != null && e.MoveNext())
+                {
+                    while (e.Current is IEnumerator current)
+                    {
+                        routinesStack.Push(current);
+                        e = current;
+                        e.MoveNext();
+                    }
+
+                    yield return e.Current;
+                }
+                else
+                {
+                    routinesStack.Pop();;
+                }
+            }
+        }
+
+        // public IEnumerator GetEnumerator() => new NTaskEnumerator(routinesStack);
+
+        private class NTaskEnumerator : IEnumerator 
+        {
+            private readonly Stack<IEnumerator> routinesStack;
+            
+            public NTaskEnumerator(Stack<IEnumerator> list)
+            {
+                routinesStack = list;
+            }
+
+            public bool MoveNext()
+            {
+                if (routinesStack.Count == 0)
+                    return false;
+
+                var e = routinesStack.Peek();
+                if (e != null && e.MoveNext())
+                {
+                    while (e.Current is IEnumerator current)
+                    {
+                        routinesStack.Push(current);
+                        return MoveNext();
+                    }
+                }
+                else
+                {
+                    routinesStack.Pop();
+                    return MoveNext();
+                }
+
+                return true;
+            }
+
+            public IEnumerator Current => routinesStack.Peek();
+            object IEnumerator.Current => routinesStack.Peek();
+
+            public void Reset()
+            {
+                
             }
         }
     }

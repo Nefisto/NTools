@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-public class NTask
+public class NTask : IEnumerable
 {
     private bool isPaused;
     private bool isStopped;
@@ -37,4 +37,9 @@ public class NTask
         => task.IsPaused = false;
 
     public void MoveNext() => task.MoveNext();
+
+    public IEnumerator GetEnumerator()
+    {
+        yield return task.GetEnumerator();
+    }
 }

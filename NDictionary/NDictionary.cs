@@ -24,10 +24,10 @@ public class NDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializatio
     {
         keyData.Clear();
         valueData.Clear();
-        foreach (var item in this)
+        foreach (var (key, value) in this)
         {
-            keyData.Add(item.Key);
-            valueData.Add(item.Value);
+            keyData.Add(key);
+            valueData.Add(value);
         }
     }
 }
