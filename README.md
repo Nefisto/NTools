@@ -100,28 +100,23 @@ myTask.MoveNext();
 
 ## Yielding for NTask
 
-​	On some occasions, like when having multiples tasks, to be able to yield for them, you can achieve it calling 
+​	On some occasions, like when having multiples tasks, to be able to yield for them, you can achieve it calling the `CustomYieldInstruction` `WaitForNTask`
 
 ```c#
 public void RunRoutine()
-{
-    StartCoroutine(WeCanYieldForTask());
-}
+    => StartCoroutine(WeCanYieldForTask());
 
 private IEnumerator WeCanYieldForTask()
 {
-    taskA = new NTask(SomeOperation(), false);
-    taskB = new NTask(SomeOtherOperation(), false);
+    taskA = new NTask(SomeOperation());
+    taskB = new NTask(SomeOtherOperation());
 
-    Debug.Log($"{Time.frameCount}");
-    yield return taskA.GetEnumerator();
-    Debug.Log($"{Time.frameCount}");
-    yield return taskB.GetEnumerator();
-    Debug.Log($"{Time.frameCount}");
+    yield return new WaitForNTask(taskA);
+    yield return new WaitForNTask(taskB);
 }
 ```
 
-
+**NOTE:** It will not start the task for you, so if called with a non-started task it will keep waiting forever
 
 
 
@@ -140,7 +135,6 @@ TODO FEAT:
 TODO DOC:
 
 - NTask
-    - Wait for finish
     - ??Delay begin??
     - Beggining on next frame??
 - NDictionary
