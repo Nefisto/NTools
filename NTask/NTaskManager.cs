@@ -65,15 +65,12 @@ public class NTaskManager : MonoBehaviour
 
                 routinesStack.Pop();
                 if (routinesStack.Count == 0)
-                {
-                    EndTask();
-                    continue;
-                }
+                    break;
 
                 e = routinesStack.Peek();
             }
             
-            OnFinished?.Invoke(IsStopped);
+            EndTask();
         }
 
         public void MoveNext()
@@ -101,7 +98,11 @@ public class NTaskManager : MonoBehaviour
             }
         }
 
-        private void EndTask() => IsRunning = false;
+        private void EndTask()
+        {
+            IsRunning = false;
+            OnFinished?.Invoke(IsStopped);
+        }
 
         public IEnumerator GetEnumerator()
         {
