@@ -79,6 +79,8 @@ myTask.Unpause();
 
 ## Moving it step by step
 
+​	Note that despite the name being equal to `IEnumerator.MoveNext()` this guy does not return a bool
+
 ```c#
 myTask.MoveNext();
 ```
@@ -96,16 +98,49 @@ myTask.MoveNext();
   }
   ```
 
+## Yielding for NTask
+
+​	On some occasions, like when having multiples tasks, to be able to yield for them, you can achieve it calling 
+
+```c#
+public void RunRoutine()
+{
+    StartCoroutine(WeCanYieldForTask());
+}
+
+private IEnumerator WeCanYieldForTask()
+{
+    taskA = new NTask(SomeOperation(), false);
+    taskB = new NTask(SomeOtherOperation(), false);
+
+    Debug.Log($"{Time.frameCount}");
+    yield return taskA.GetEnumerator();
+    Debug.Log($"{Time.frameCount}");
+    yield return taskB.GetEnumerator();
+    Debug.Log($"{Time.frameCount}");
+}
+```
+
+
+
+
+
+## Know issues:
+
+* Calling a `WaitForEndOfFrame` breaks the task, without any warning, it simple stop there
+
+
+
 
 TODO FEAT:
 
 - Some simple way to work with Service Locator + Lazy behavior + NULL pattern
 - Cast items under mouse on scene, like PEEK does
-- Yielding for the NTask
 
 TODO DOC:
 
 - NTask
+    - Wait for finish
     - ??Delay begin??
     - Beggining on next frame??
 - NDictionary

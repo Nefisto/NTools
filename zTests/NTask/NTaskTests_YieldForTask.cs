@@ -14,9 +14,9 @@ public partial class NTaskTests
         taskA = new NTask(WaitingInOneLayer(), false);
         taskB = new NTask(WaitingInMultipleLayer(), false);
 
-        yield return taskA.GetEnumerator();
+        yield return new WaitForNTask(taskA);
         counter++;
-        yield return taskB.GetEnumerator();
+        yield return new WaitForNTask(taskB);
         counter++;
         
         Assert.AreEqual(counter, 2);
