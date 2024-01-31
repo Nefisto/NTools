@@ -1,4 +1,25 @@
-﻿# NTask
+﻿# NDictionary
+
+​	Uses Odin to serialize a dictionary that persist on nested prefabs scenarios
+
+### WHY:
+
+* Odin's dictionary isn't reliable when working with nested prefabs
+
+### REQUIREMENTS:
+
+* Odin package
+
+### HOW  TO:
+
+​	It uses odin serializer and the 2021 unity's ability to serialize generic fields without declaring a concrete version of it, so you just need to create the field with a serializing attribute
+
+```c#
+[SerializeField]
+private NDictionary<int, int> myDict;
+```
+
+# NTask
 
 ​	It provides some useful API's to help you to manager your routines. 
 
@@ -140,3 +161,4 @@ TODO DOC:
     - ??Delay begin??
     - Beggining on next frame??
 - NDictionary
+- Fix MyDebug
