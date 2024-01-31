@@ -5,7 +5,6 @@ using UnityEngine;
 namespace NTools
 {
     [Serializable]
-
     public class NDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
         [SerializeField]
