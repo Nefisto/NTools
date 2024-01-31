@@ -1,4 +1,63 @@
-﻿# NDictionary
+﻿# ENTRY POINTS
+
+​	It acts almost equal to an observer pattern, the only difference is that while the observers can't inject code into subject flow, as the subject just notify and go, here the observer will inject code to be executed by the subject before the flow on the subject keep going
+
+### WHY:
+
+* A lot of times I need to make an external routine to run before something happens on an already existing executing routine. **e.g.** an status effect feedback should run every time that it ticks before the battle continue
+
+### **HOW  TO:**
+
+​	You need to create the entry points on your flow. I'm simulating an snippet on some kind of turn based RPG where the context of current action is passed through the battle flow
+
+```c#
+public class DamageContext : IEntryPointContext
+{
+    public int amount;
+}
+
+private EntryPoint takingDamageEntryPoint = new();
+private EntryPoint tookDamageEntryPoint = new();
+
+private IEnumerator MyBattleRoutine()
+{
+    ...
+        var damageContext = new DamageContext() { amount = 1 };
+    
+        yield return takingDamageEntryPoint.Run(damageContext);
+        yield return targetOfSkill.TakeDamage(damageContext);
+        yield return tookDamageEntryPoint.Run(damageContext);
+    ...
+}
+```
+
+​	And now let's suppose that your external code want to do some interaction before the damage actually happen, something like a shield the will block all damage
+
+```c#
+public class MyShieldSkill
+{
+    // A base method that will be called when the skill is used
+    public void Register()
+    {
+        var battleManager = ServiceLocator.BattleManager; // Or any other way to get a reference to the battle manager
+
+        battleManager.takingDamageEntryPoint.Add(ShieldBehavior);
+    }
+
+    private IEnumerator ShieldBehavior(IEntryPointContext ctx)
+    {
+        // As I know that this will be registered just before the damage calculation, I can safely cast it to the properly type
+        var damageContext = (DamageContext)ctx;
+
+        damageContext.amount = 0;
+
+        // We can also run it in parallel using StartCoroutine() to avoid blocking the flow during the animation
+        yield return SomeShieldAnimation();
+    }
+}
+```
+
+# NDictionary
 
 ​	Uses Odin to serialize a dictionary that persist on nested prefabs scenarios
 
@@ -160,5 +219,4 @@ TODO DOC:
 - NTask
     - ??Delay begin??
     - Beggining on next frame??
-- NDictionary
 - Fix MyDebug
