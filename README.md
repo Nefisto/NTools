@@ -131,6 +131,8 @@ TODO FEAT:
 
 - Some simple way to work with Service Locator + Lazy behavior + NULL pattern
 - Cast items under mouse on scene, like PEEK does
+- UI Stack
+- Pooler
 
 TODO DOC:
 
