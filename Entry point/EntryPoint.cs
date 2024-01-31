@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace NTools
 {
+    [Serializable]
     public class EntryPoint
     {
         private readonly List<Func<IEntryPointContext, IEnumerator>> actions = new();
