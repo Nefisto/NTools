@@ -1,45 +1,43 @@
 ﻿using System;
 using System.Collections;
-using UnityEngine;
 
-public class NTask : IEnumerable
+namespace NTools
 {
-    public bool IsRunning => task.IsRunning;
-    private readonly NTaskManager.TaskState task;
-
-    public NTask (IEnumerator initialRoutine, bool autoStart = true)
+    public class NTask : IEnumerable
     {
-        task = NTaskManager.CreateTask(initialRoutine);
-        task.OnFinished += TaskFinished;
-        
-        if (autoStart)
-            Start();
-    }
+        public bool IsRunning => task.IsRunning;
+        private readonly NTaskManager.TaskState task;
 
-    public void Start (bool startOnNextFrame = false)
-        => task.Start(startOnNextFrame);
+        public NTask (IEnumerator initialRoutine, bool autoStart = true)
+        {
+            task = NTaskManager.CreateTask(initialRoutine);
+            task.OnFinished += TaskFinished;
 
-    public event Action<bool> OnFinished;
+            if (autoStart)
+                Start();
+        }
 
-    private void TaskFinished (bool manual)
-        => OnFinished?.Invoke(manual);
+        public void Start (bool startOnNextFrame = false) => task.Start(startOnNextFrame);
 
-    public void Stop()
-    {
-        task.IsStopped = true;
-        task.IsRunning = false;
-    }
+        public event Action<bool> OnFinished;
 
-    public void Pause()
-        => task.IsPaused = true;
+        private void TaskFinished (bool manual) => OnFinished?.Invoke(manual);
 
-    public void Unpause()
-        => task.IsPaused = false;
+        public void Stop()
+        {
+            task.IsStopped = true;
+            task.IsRunning = false;
+        }
 
-    public void MoveNext() => task.MoveNext();
+        public void Pause() => task.IsPaused = true;
 
-    public IEnumerator GetEnumerator()
-    {
-        yield return task.GetEnumerator();
+        public void Unpause() => task.IsPaused = false;
+
+        public void MoveNext() => task.MoveNext();
+
+        public IEnumerator GetEnumerator()
+        {
+            yield return task.GetEnumerator();
+        }
     }
 }

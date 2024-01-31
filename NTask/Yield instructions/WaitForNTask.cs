@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
-public class WaitForNTask : CustomYieldInstruction
+namespace NTools
 {
-    private NTask task;
-    public WaitForNTask (NTask task) => this.task = task;
+    public class WaitForNTask : CustomYieldInstruction
+    {
+        private NTask task;
+        public WaitForNTask (NTask task) => this.task = task;
 
-    public override bool keepWaiting => task.IsRunning;
+        public override bool keepWaiting => task.IsRunning;
+    }
 }

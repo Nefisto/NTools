@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using NTools;
 using UnityEngine;
 
 public class NTaskSample : MonoBehaviour
