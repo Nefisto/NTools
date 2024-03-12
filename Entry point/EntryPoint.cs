@@ -11,11 +11,6 @@ namespace NTools
         private event Action<IEntryPointContext> NonYieldableListeners;
         private readonly List<Func<IEntryPointContext, IEnumerator>> listeners = new();
 
-        public void AddNonYieldableListener (Action<IEntryPointContext> listener) => NonYieldableListeners += listener;
-        public void RemoveNonYieldableListener (Action<IEntryPointContext> listener) => NonYieldableListeners -= listener;
-        public void AddYieldableListener (Func<IEntryPointContext, IEnumerator> listener) => listeners.Add(listener);
-        public void RemoveYieldableListener (Func<IEntryPointContext, IEnumerator> listener) => listeners.Remove(listener);
-        
         public void Clear()
         {
             NonYieldableListeners = null;
