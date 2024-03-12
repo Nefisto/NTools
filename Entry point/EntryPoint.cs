@@ -33,7 +33,7 @@ namespace NTools
         }
 
         /// <summary>
-        /// Note that this will invoke JUST the non-yieldable part
+        /// Note that this will invoke JUST the non-yieldable listeners
         /// </summary>
         public void Invoke (IEntryPointContext ctx = null) => NonYieldableListeners?.Invoke(ctx);
 
@@ -49,6 +49,18 @@ namespace NTools
             return left;
         }
 
+        public static EntryPoint operator + (EntryPoint left, Func<IEntryPointContext, IEnumerator> right)
+        {
+            left.listeners.Add(right);
+            return left;
+        }
+
+        public static EntryPoint operator - (EntryPoint left, Func<IEntryPointContext, IEnumerator> right)
+        {
+            left.listeners.Remove(right);
+            return left;
+        }
+        
         private class EmptyEntryPointContext : IEntryPointContext { }
     }
 }
