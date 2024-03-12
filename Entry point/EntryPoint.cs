@@ -8,20 +8,46 @@ namespace NTools
     [Serializable]
     public class EntryPoint
     {
-        private readonly List<Func<IEntryPointContext, IEnumerator>> actions = new();
+        private event Action<IEntryPointContext> NonYieldableListeners;
+        private readonly List<Func<IEntryPointContext, IEnumerator>> listeners = new();
 
-        public void Add (Func<IEntryPointContext, IEnumerator> callback) => actions.Add(callback);
-        public void Remove (Func<IEntryPointContext, IEnumerator> callback) => actions.Remove(callback);
-
-        public IEnumerator Run (IEntryPointContext ctx = null)
+        public void AddNonYieldableListener (Action<IEntryPointContext> listener) => NonYieldableListeners += listener;
+        public void RemoveNonYieldableListener (Action<IEntryPointContext> listener) => NonYieldableListeners -= listener;
+        public void AddYieldableListener (Func<IEntryPointContext, IEnumerator> listener) => listeners.Add(listener);
+        public void RemoveYieldableListener (Func<IEntryPointContext, IEnumerator> listener) => listeners.Remove(listener);
+        
+        public void Clear()
         {
+            NonYieldableListeners = null;
+            listeners.Clear();
+        }
+
+        public IEnumerator YieldableInvoke (IEntryPointContext ctx = null)
+        {
+            NonYieldableListeners?.Invoke(ctx);
+            
             ctx ??= new EmptyEntryPointContext();
 
-            foreach (var t in actions.ToList())
+            foreach (var t in listeners.ToList())
                 yield return t?.Invoke(ctx);
         }
 
-        public void Clear() => actions.Clear();
+        /// <summary>
+        /// Note that this will invoke JUST the non-yieldable part
+        /// </summary>
+        public void Invoke (IEntryPointContext ctx = null) => NonYieldableListeners?.Invoke(ctx);
+
+        public static EntryPoint operator + (EntryPoint left, Action<IEntryPointContext> right)
+        {
+            left.NonYieldableListeners += right;
+            return left;
+        }
+        
+        public static EntryPoint operator - (EntryPoint left, Action<IEntryPointContext> right)
+        {
+            left.NonYieldableListeners -= right;
+            return left;
+        }
 
         private class EmptyEntryPointContext : IEntryPointContext { }
     }
