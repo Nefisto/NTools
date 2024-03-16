@@ -6,15 +6,17 @@ using System.Linq;
 namespace NTools
 {
     [Serializable]
-    public class EntryPoint : EntryPoint<IEntryPointContext>
+    public class EntryPoint
     {
-        public static EntryPoint operator + (EntryPoint left, Func<IEntryPointContext, IEnumerator> right)
+        private readonly List<Func<IEnumerator>> listeners = new();
+
+        public static EntryPoint operator + (EntryPoint left, Func<IEnumerator> right)
         {
             left.listeners.Add(right);
             return left;
         }
         
-        public static EntryPoint operator - (EntryPoint left, Func<IEntryPointContext, IEnumerator> right)
+        public static EntryPoint operator - (EntryPoint left, Func<IEnumerator> right)
         {
             left.listeners.Add(right);
             return left;
