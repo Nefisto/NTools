@@ -10,6 +10,14 @@ namespace NTools
     {
         private readonly List<Func<IEnumerator>> listeners = new();
 
+        public void Clear() => listeners.Clear();
+
+        public IEnumerator YieldableInvoke ()
+        {
+            foreach (var t in listeners.ToList())
+                yield return t?.Invoke();
+        }
+        
         public static EntryPoint operator + (EntryPoint left, Func<IEnumerator> right)
         {
             left.listeners.Add(right);
