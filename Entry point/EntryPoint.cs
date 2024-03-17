@@ -8,54 +8,92 @@ namespace NTools
     [Serializable]
     public class EntryPoint
     {
-        private readonly List<Func<IEnumerator>> listeners = new();
+        // Used to be able to apply lambda as listeners
+        private Action nonYieldableListener;
+        private readonly List<Func<IEnumerator>> yieldableListener = new();
 
-        public void Clear() => listeners.Clear();
+        public void Clear()
+        {
+            nonYieldableListener = null;
+            yieldableListener.Clear();
+        }
 
         public IEnumerator YieldableInvoke ()
         {
-            foreach (var t in listeners.ToList())
+            nonYieldableListener?.Invoke();
+            
+            foreach (var t in yieldableListener.ToList())
                 yield return t?.Invoke();
         }
         
-        public static EntryPoint operator + (EntryPoint left, Func<IEnumerator> right)
+        public static EntryPoint operator + (EntryPoint left, Action right)
         {
-            left.listeners.Add(right);
+            left.nonYieldableListener += right;
             return left;
         }
-        
+
+        public static EntryPoint operator - (EntryPoint left, Action right)
+        {
+            left.nonYieldableListener -= right;
+            return left;
+        }
+
+        public static EntryPoint operator + (EntryPoint left, Func<IEnumerator> right)
+        {
+            left.yieldableListener.Add(right);
+            return left;
+        }
+
         public static EntryPoint operator - (EntryPoint left, Func<IEnumerator> right)
         {
-            left.listeners.Add(right);
+            left.yieldableListener.Add(right);
             return left;
         }
     }
     
     [Serializable]
-    public class EntryPoint<T> where T : IEntryPointContext
+    public class EntryPoint<T> where T : class
     {
-        protected readonly List<Func<T, IEnumerator>> listeners = new();
+        private event Action<T> NonYieldableListeners;
+        private readonly List<Func<T, IEnumerator>> yieldableListeners = new();
 
-        public void Clear() => listeners.Clear();
-
-        public IEnumerator YieldableInvoke (T ctx = default)
+        public void Clear()
         {
-            foreach (var t in listeners.ToList())
+            NonYieldableListeners = null;
+            yieldableListeners.Clear();
+        }
+
+        public IEnumerator YieldableInvoke (T ctx = null)
+        {
+            NonYieldableListeners?.Invoke(ctx);
+
+            foreach (var t in yieldableListeners.ToList())
                 yield return t?.Invoke(ctx);
         }
+
+        public static EntryPoint<T> operator + (EntryPoint<T> left, Action<T> right)
+        {
+            left.NonYieldableListeners += right;
+            return left;
+        }
         
+        public static EntryPoint operator - (EntryPoint<T> left, Action<T> right)
+        {
+            left.NonYieldableListeners -= right;
+            
+            return left as EntryPoint;
+        }
+
         public static EntryPoint<T> operator + (EntryPoint<T> left, Func<T, IEnumerator> right)
         {
-            left.listeners.Add(right);
+            left.yieldableListeners.Add(right);
             return left;
         }
 
         public static EntryPoint<T> operator - (EntryPoint<T> left, Func<T, IEnumerator> right)
         {
-            left.listeners.Remove(right);
+            left.yieldableListeners.Remove(right);
             return left;
         }
-        
-        protected class EmptyEntryPointContext : IEntryPointContext { }
     }
 }
