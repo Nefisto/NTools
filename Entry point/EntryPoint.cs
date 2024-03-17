@@ -77,11 +77,11 @@ namespace NTools
             return left;
         }
         
-        public static EntryPoint operator - (EntryPoint<T> left, Action<T> right)
+        public static EntryPoint<T> operator - (EntryPoint<T> left, Action<T> right)
         {
             left.NonYieldableListeners -= right;
-            
-            return left as EntryPoint;
+
+            return left;
         }
 
         public static EntryPoint<T> operator + (EntryPoint<T> left, Func<T, IEnumerator> right)
