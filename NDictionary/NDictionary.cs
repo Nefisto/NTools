@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NTools
@@ -15,6 +16,21 @@ namespace NTools
         [HideInInspector]
         private List<TValue> valueData = new();
 
+        public NDictionary() { }
+
+        public NDictionary(IEnumerable<TKey> keys, IEnumerable<TValue> elements)
+        {
+            var keysList = keys.ToArray();
+            var elementsList = elements.ToArray();
+            for (var i = 0; i < keysList.Length; i++)
+            {
+                if (ContainsKey(keysList[i]))
+                    continue;
+                
+                Add(keysList[i], elementsList[i]);
+            }
+        }
+        
         void ISerializationCallbackReceiver.OnAfterDeserialize()
         {
             Clear();

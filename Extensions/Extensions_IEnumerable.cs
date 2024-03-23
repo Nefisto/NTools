@@ -6,6 +6,19 @@ namespace NTools
 {
     public static partial class Extensions
     {
+        public static NDictionary<TKey, TElement> ToNDictionary<TSource, TKey, TElement> (
+            this IEnumerable<TSource> source,
+            Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector)
+        {
+            var sourceList = source.ToList();
+            
+            var keys = sourceList.Select(keySelector.Invoke);
+            var elements = sourceList.Select(elementSelector.Invoke);
+
+            return new NDictionary<TKey, TElement>(keys, elements);
+        }
+
         public static T GetRandom<T> (this IEnumerable<T> source)
         {
             return source.GetRandom(1).FirstOrDefault();
@@ -34,7 +47,7 @@ namespace NTools
         /// <summary>Perform an action on each item.</summary>
         /// <param name="source">The source.</param>
         /// <param name="action">The action to perform.</param>
-        public static IEnumerable<T> ForEach<T> (this IEnumerable<T> source, 
+        public static IEnumerable<T> ForEach<T> (this IEnumerable<T> source,
             Action<T, int> action)
         {
             int num = 0;
@@ -58,5 +71,4 @@ namespace NTools
             return source.Distinct(new GenericComparer<T>(equalityPredicate, t => t.GetHashCode()));
         }
     }
-
 }
