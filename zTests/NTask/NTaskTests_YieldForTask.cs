@@ -12,8 +12,8 @@ public partial class NTaskTests
     public IEnumerator WeCanYieldForTask()
     {
         var counter = 0;
-        taskA = new NTask(WaitingInOneLayer(), false);
-        taskB = new NTask(WaitingInMultipleLayer(), false);
+        taskA = new NTask(WaitingInOneLayer());
+        taskB = new NTask(WaitingInMultipleLayer());
 
         yield return new WaitForNTask(taskA);
         counter++;

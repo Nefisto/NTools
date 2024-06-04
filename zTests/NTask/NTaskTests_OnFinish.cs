@@ -10,10 +10,10 @@ public partial class NTaskTests
     public IEnumerator OnFinishIsWorkingOnTasksSystemControlledTasks()
     {
         var counter = 0;
-        var task = new NTask(YieldForTwoFrames(), false);
+        var task = new NTask(YieldForTwoFrames(), new NTask.Settings() { autoStart = false });
         task.OnFinished += _ => counter++;
 
-        task.Start();
+        task.Resume();
         yield return new WaitForSeconds(.1f);
 
         Assert.AreEqual(counter, 1);
@@ -23,7 +23,7 @@ public partial class NTaskTests
     public IEnumerator OnFinishIsWorkingOnTasksManuallyControlled()
     {
         var counter = 0;
-        var task = new NTask(YieldForTwoFrames(), false);
+        var task = new NTask(YieldForTwoFrames(), new NTask.Settings() { autoStart = false });
         task.OnFinished += _ => counter++;
 
         task.MoveNext();

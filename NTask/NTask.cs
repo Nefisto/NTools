@@ -3,21 +3,21 @@ using System.Collections;
 
 namespace NTools
 {
-    public class NTask : IEnumerable
+    public partial class NTask : IEnumerable
     {
         public bool IsRunning => task.IsRunning;
         private readonly NTaskManager.TaskState task;
 
-        public NTask (IEnumerator initialRoutine, bool autoStart = true)
+        public NTask (IEnumerator initialRoutine, Settings settings = null)
         {
+            settings ??= new Settings();
+            
             task = NTaskManager.CreateTask(initialRoutine);
             task.OnFinished += TaskFinished;
 
-            if (autoStart)
-                Start();
+            if (settings.autoStart)
+                task.Start(settings);
         }
-
-        public void Start (bool startOnNextFrame = false) => task.Start(startOnNextFrame);
 
         public event Action<bool> OnFinished;
 
@@ -31,13 +31,28 @@ namespace NTools
 
         public void Pause() => task.IsPaused = true;
 
-        public void Unpause() => task.IsPaused = false;
+        public void Resume()
+        {
+            if (!task.IsRunning)
+            {
+                task.Start();
+                return;
+            }
+            
+            task.IsPaused = false;
+        }
 
         public void MoveNext() => task.MoveNext();
 
         public IEnumerator GetEnumerator()
         {
             yield return task.GetEnumerator();
+        }
+
+        public class Settings
+        {
+            public bool autoStart = true;
+            public bool startOnNextFrame = false;
         }
     }
 }

@@ -17,11 +17,11 @@ public class NTaskSample : MonoBehaviour
         counterTask = new NTask(LayerARoutine());
     }
 
-    public void StartTask() => counterTask.Start(); 
+    public void StartTask() => counterTask.Resume(); 
     
     public void Pause() => counterTask.Pause();
 
-    public void Unpause() => counterTask.Unpause();
+    public void Resume() => counterTask.Resume();
 
     public void MoveOneStep() => counterTask.MoveNext();
 
