@@ -209,6 +209,8 @@ private IEnumerator WeCanYieldForTask()
 
 TODO FEAT:
 
+- NTask
+  - Some way to run the routine to the end
 - Some simple way to work with Service Locator + Lazy behavior + NULL pattern
 - Cast items under mouse on scene, like PEEK does
 - UI Stack

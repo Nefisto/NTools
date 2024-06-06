@@ -35,6 +35,7 @@ namespace NTools
         {
             if (!task.IsRunning)
             {
+                task.IsPaused = false;
                 task.Start();
                 return;
             }
