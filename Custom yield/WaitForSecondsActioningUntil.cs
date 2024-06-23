@@ -8,8 +8,8 @@ namespace NTools
     /// </summary>
     public class WaitForSecondsActioningUntil : CustomYieldInstruction
     {
-        private float timer = 0f;
-        private float counter = 0f;
+        private float timer;
+        private float counter;
 
         private Action<float> action;
 
