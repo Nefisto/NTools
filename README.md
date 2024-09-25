@@ -205,6 +205,12 @@ private IEnumerator WeCanYieldForTask()
 * Calling a `WaitForEndOfFrame` breaks the task, without any warning, it simple stop there
 
 
+# Extensions
+
+## Transform
+### DestroyChildren()
+  Destroy all children from current transform
+
 
 
 TODO FEAT:
