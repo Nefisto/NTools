@@ -218,6 +218,10 @@ private IEnumerator WeCanYieldForTask()
 ## ResetRectTransformAtAwake
   Useful to separate HUDs outside game
 
+# Prefabs
+## [Debug] HUD Background
+  Used for organizations only, used to achieve things like this
+  !([https://imgur.com/a/WQr9KXs])
 
 TODO FEAT:
 
