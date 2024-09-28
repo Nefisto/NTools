@@ -215,6 +215,9 @@ private IEnumerator WeCanYieldForTask()
 ## DisableAtAwake
   Useful component for debug things that should happen outisde play mode only
 
+## ResetRectTransformAtAwake
+  Useful to separate HUDs outside game
+
 
 TODO FEAT:
 
