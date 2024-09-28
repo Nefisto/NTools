@@ -211,6 +211,9 @@ private IEnumerator WeCanYieldForTask()
 ### DestroyChildren()
   Destroy all children from current transform
 
+# Utilities
+## DisableAtAwake
+  Useful component for debug things that should happen outisde play mode only
 
 
 TODO FEAT:
