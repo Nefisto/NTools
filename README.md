@@ -214,6 +214,16 @@ private IEnumerator WeCanYieldForTask()
 ## Float
 ### SeparateIntegerAndFractionPart()
 
+# Interfaces
+
+### IMonobehavior
+  Contains some props to allow access to runtime components
+
+e.g. Transform
+```c#
+public Transform Transform => (this as MonoBehaviour)?.transform;
+```
+
 # Components
 ## DisableAtAwake
   Useful component for debug things that should happen outisde play mode only
