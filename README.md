@@ -211,7 +211,10 @@ private IEnumerator WeCanYieldForTask()
 ### DestroyChildren()
   Destroy all children from current transform
 
-# Utilities
+## Float
+### SeparateIntegerAndFractionPart()
+
+# Components
 ## DisableAtAwake
   Useful component for debug things that should happen outisde play mode only
 
