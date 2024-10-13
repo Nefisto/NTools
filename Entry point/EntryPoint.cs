@@ -46,7 +46,7 @@ namespace NTools
 
         public static EntryPoint operator - (EntryPoint left, Func<IEnumerator> right)
         {
-            left.yieldableListener.Add(right);
+            left.yieldableListener.Remove(right);
             return left;
         }
     }
