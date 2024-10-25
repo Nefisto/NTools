@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using NTools;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenFading : MonoBehaviour
+[Serializable]
+public class ScreenFading
 {
     [TitleGroup("References")]
     [SerializeField]
