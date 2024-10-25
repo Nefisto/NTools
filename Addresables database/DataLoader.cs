@@ -7,7 +7,8 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
-public class DataLoader<T> where T : Object
+public partial class DataLoader<T> : IEnumerable<T> 
+    where T : Object
 {
     private AsyncOperationHandle handle;
 
