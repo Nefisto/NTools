@@ -1,37 +1,84 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NTools
 {
     public static partial class Extensions
     {
-        public static bool TryGetComponentInChildren<T>(this Component component, Self self, Inactive inactive, out T foundComponent) where T : class
+        public static T NGetComponentInChildren<T> (this Component component, Self self) where T : class
+            => component.NGetComponentInChildren<T>(self,
+                component.gameObject.activeInHierarchy ? Inactive.Exclude : Inactive.Include);
+
+        public static IEnumerable<T> NGetComponentsInChildren<T> (this Component component, Self self) where T : class
+            => component.NGetComponentsInChildren<T>(self,
+                component.gameObject.activeInHierarchy ? Inactive.Exclude : Inactive.Include);
+
+        public static T NGetComponentInChildren<T> (this Component component, Self self, Inactive inactive)
+            where T : class
         {
-            foundComponent = null;
-        
-            return self switch
+            switch (self)
             {
-                Self.Include => (foundComponent = component.GetComponentInChildren<T>(inactive == Inactive.Include)) != null,
-                _ when component.transform.parent is { } parent && parent != null => (foundComponent =
-                    parent.GetComponentInChildren<T>(inactive == Inactive.Include)) != null,
-                _ => false
-            };
+                case Self.Include:
+                    return component.GetComponentInChildren<T>(inactive == Inactive.Include);
+
+                case var _ when component.transform.childCount != 0:
+                {
+                    var includeInactive = inactive == Inactive.Include;
+                    foreach (Transform child in component.transform)
+                    {
+                        if (!child.gameObject.activeInHierarchy && !includeInactive)
+                            continue;
+
+                        var foundComponent = child.GetComponentInChildren<T>();
+
+                        if (foundComponent == null)
+                            continue;
+
+                        return foundComponent;
+                    }
+
+
+                    return null;
+                }
+
+                default:
+                    return null;
+            }
         }
 
-        public static bool TryGetComponentInChildren<T> (this Component component, Self self, out T foundComponent)
-            where T : class
-            => (foundComponent = component.GetComponentInChildren<T>(self,
-                   component.gameObject.activeInHierarchy ? Inactive.Exclude : Inactive.Include))
-               != null;
-
-        public static T GetComponentInChildren<T>(this Component component, Self self, Inactive inactive) where T : class
-            => self switch
+        private static IEnumerable<T> NGetComponentsInChildren<T> (this Component component, Self self,
+            Inactive inactive) where T : class
+        {
+            switch (self)
             {
-                Self.Include => component.GetComponentInChildren<T>(inactive == Inactive.Include),
-                _ when component.transform.parent is { } parent && parent != null => parent.GetComponentInChildren<T>(inactive == Inactive.Include),
-                _ => null
-            };
- 
-        public static T GetComponentInChildren<T>(this Component component, Self self) where T : class
-            => component.GetComponentInChildren<T>(self, component.gameObject.activeInHierarchy ? Inactive.Exclude : Inactive.Include);
+                case Self.Include:
+                    return component.GetComponentsInChildren<T>(inactive == Inactive.Include);
+
+                case var _ when component.transform.childCount != 0:
+                {
+                    var components = new List<T>();
+
+                    var includeInactive = inactive == Inactive.Include;
+                    foreach (Transform child in component.transform)
+                    {
+                        if (!child.gameObject.activeInHierarchy && !includeInactive)
+                            continue;
+
+                        var foundComponent = child.GetComponentsInChildren<T>(includeInactive);
+
+                        if (foundComponent == null)
+                            continue;
+
+                        components.AddRange(foundComponent);
+                    }
+
+
+                    return components;
+                }
+
+                default:
+                    return null;
+            }
+        }
     }
 }
