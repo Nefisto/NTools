@@ -103,8 +103,8 @@ namespace NTools
         where T : class
         where K : EventArgs
     {
-        private readonly List<Func<T, IEnumerator>> yieldableListeners = new();
-        private event Action<T> NonYieldableListeners;
+        private readonly List<Func<T, K, IEnumerator>> yieldableListeners = new();
+        private event Action<T, K> NonYieldableListeners;
 
         public void Clear()
         {
@@ -112,34 +112,33 @@ namespace NTools
             yieldableListeners.Clear();
         }
 
-        public IEnumerator YieldableInvoke (T ctx = null)
+        public IEnumerator YieldableInvoke (T sender, K args)
         {
-            NonYieldableListeners?.Invoke(ctx);
+            NonYieldableListeners?.Invoke(sender, args);
 
             foreach (var t in yieldableListeners.ToList())
-                yield return t?.Invoke(ctx);
+                yield return t?.Invoke(sender, args);
         }
 
-        public static EntryPoint<T, K> operator + (EntryPoint<T, K> left, Action<T> right)
+        public static EntryPoint<T, K> operator + (EntryPoint<T, K> left, Action<T, K> right)
         {
             left.NonYieldableListeners += right;
             return left;
         }
 
-        public static EntryPoint<T, K> operator - (EntryPoint<T, K> left, Action<T> right)
+        public static EntryPoint<T, K> operator - (EntryPoint<T, K> left, Action<T, K> right)
         {
             left.NonYieldableListeners -= right;
-
             return left;
         }
 
-        public static EntryPoint<T, K> operator + (EntryPoint<T, K> left, Func<T, IEnumerator> right)
+        public static EntryPoint<T, K> operator + (EntryPoint<T, K> left, Func<T, K, IEnumerator> right)
         {
             left.yieldableListeners.Add(right);
             return left;
         }
 
-        public static EntryPoint<T, K> operator - (EntryPoint<T, K> left, Func<T, IEnumerator> right)
+        public static EntryPoint<T, K> operator - (EntryPoint<T, K> left, Func<T, K, IEnumerator> right)
         {
             left.yieldableListeners.Remove(right);
             return left;
