@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace NTools
 {
-    [Serializable]
     public class EntryPoint
     {
         private readonly List<Func<object, EventArgs, IEnumerator>> yieldableListeners = new();
