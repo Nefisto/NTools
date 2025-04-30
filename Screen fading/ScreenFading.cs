@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Collections;
 using NTools;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
 public class ScreenFading
 {
-    [TitleGroup("References")]
+    [Header("References")]
     [SerializeField]
     private Image image;
 
-    [TitleGroup("Debug")]
-    [ReadOnly]
-    [ShowInInspector]
+    [Header("Debug")]
+    // READONLY
     private bool isFaded;
 
     public IEnumerator FadeOut (Settings settings = null)

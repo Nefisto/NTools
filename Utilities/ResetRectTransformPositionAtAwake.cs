@@ -1,9 +1,8 @@
-﻿using Sirenix.OdinInspector;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ResetRectTransformPositionAtAwake : MonoBehaviour
 {
-    [TitleGroup("Settings")]
+    [Header("Settings")]
     [SerializeField]
     private Vector2 positionToReset;
 

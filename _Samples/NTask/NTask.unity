@@ -537,7 +537,6 @@ GameObject:
   m_Component:
   - component: {fileID: 290218991}
   - component: {fileID: 290218990}
-  - component: {fileID: 290218992}
   m_Layer: 0
   m_Name: JUST PRESS PLAY
   m_TagString: Untagged
@@ -572,21 +571,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &290218992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 290218989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b68ce852a68641299ad4c773e78360af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  myDict:
-    keyData: []
-    valueData: 
 --- !u!1 &481023318
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,7 +606,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4294967295
 --- !u!114 &481023320
 MonoBehaviour:
   m_ObjectHideFlags: 0

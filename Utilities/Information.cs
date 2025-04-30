@@ -1,5 +1,4 @@
-﻿using Sirenix.OdinInspector;
-using UnityEngine;
+﻿using UnityEngine;
 // ReSharper disable NotAccessedField.Local
 
 /// <summary>
@@ -8,7 +7,7 @@ using UnityEngine;
 public class Information : MonoBehaviour
 {
     [Multiline(5)]
-    [HideLabel]
     [SerializeField]
+    // HIDELABEL
     private string message;
 }
