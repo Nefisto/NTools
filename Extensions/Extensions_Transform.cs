@@ -9,5 +9,11 @@ namespace NTools
             foreach (Transform child in transform)
                 Object.Destroy(child.gameObject);
         }
+        
+        public static void DisableChildren (this Transform transform)
+        {
+            foreach (Transform child in transform)
+                child.gameObject.SetActive(false);
+        }
     }
 }
