@@ -5,13 +5,13 @@ using UnityEngine;
 
 public static class VersionManager
 {
-    [MenuItem("Tools/Version/Increment Patch", priority = 1)]
+    [MenuItem("Tools/NTools/Version/Increment Patch", priority = 1)]
     public static void IncrementPatch() => UpdateVersion(v => new Version(v.Major, v.Minor, v.Build + 1));
 
-    [MenuItem("Tools/Version/Increment Minor", priority = 2)]
+    [MenuItem("Tools/NTools/Version/Increment Minor", priority = 2)]
     public static void IncrementMinor() => UpdateVersion(v => new Version(v.Major, v.Minor + 1, 0));
 
-    [MenuItem("Tools/Version/Increment Major", priority = 3)]
+    [MenuItem("Tools/NTools/Version/Increment Major", priority = 3)]
     public static void IncrementMajor() => UpdateVersion(v => new Version(v.Major + 1, 0, 0));
 
     private static void UpdateVersion (Func<Version, Version> updaterCallback)
