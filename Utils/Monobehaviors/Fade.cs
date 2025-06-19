@@ -34,9 +34,17 @@ public class FadeScreen : MonoBehaviour
             fadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, 0f);
         }
         
-        await fadeImage
-            .DOFade(1f, settings.FadeDuration)
-            .AsyncWaitForCompletion();
+        var elapsedTime = 0f;
+        var startAlpha = fadeImage.color.a;
+        while (elapsedTime < settings.FadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            var newAlpha = Mathf.Lerp(startAlpha, 1f, elapsedTime / settings.FadeDuration);
+            fadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, newAlpha);
+            await UniTask.Yield();
+        }
+
+        fadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, 1f);
     }
 
     public async UniTask FadeOutAsync (Settings settings = null)
@@ -50,9 +58,17 @@ public class FadeScreen : MonoBehaviour
             fadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, 1f);
         }
 
-        await fadeImage
-            .DOFade(0f, settings.FadeDuration)
-            .AsyncWaitForCompletion();
+        var elapsedTime = 0f;
+        var startAlpha = fadeImage.color.a;
+        while (elapsedTime < settings.FadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            var newAlpha = Mathf.Lerp(startAlpha, 0f, elapsedTime / settings.FadeDuration);
+            fadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, newAlpha);
+            await UniTask.Yield();
+        }
+
+        fadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, 0f);
         fadeImage.raycastTarget = false;
     }
 
