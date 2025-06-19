@@ -251,3 +251,5 @@ TODO DOC:
     - ??Delay begin??
     - Beggining on next frame??
 - Fix MyDebug
+- Blocker
+- 
