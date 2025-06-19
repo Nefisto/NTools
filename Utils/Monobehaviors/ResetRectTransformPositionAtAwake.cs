@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-public class ResetRectTransformPositionAtAwake : MonoBehaviour
+namespace NTools
 {
-    [Header("Settings")]
-    [SerializeField]
-    private Vector2 positionToReset;
+    public class ResetRectTransformPositionAtAwake : MonoBehaviour
+    {
+        [Header("Settings")]
+        [SerializeField]
+        private Vector2 positionToReset;
 
-    private void Awake() => ((RectTransform)transform).anchoredPosition = positionToReset;
+        private void Awake() => ((RectTransform)transform).anchoredPosition = positionToReset;
+    }
 }

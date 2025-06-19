@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
-public class DisableAtAwake : MonoBehaviour
+namespace NTools
 {
-    private void Awake() => gameObject.SetActive(false);
+    public class DisableAtAwake : MonoBehaviour
+    {
+        private void Awake()
+        {
+            gameObject.SetActive(false);
+        }
+    }
 }

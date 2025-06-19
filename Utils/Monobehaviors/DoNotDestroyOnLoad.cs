@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 
-public class DoNotDestroyOnLoad : MonoBehaviour
+namespace NTools
 {
-    private void Awake()
+    public class DoNotDestroyOnLoad : MonoBehaviour
     {
-        transform.parent = null;
-        DontDestroyOnLoad(gameObject);
+        private void Awake()
+        {
+            transform.SetParent(null);
+            DontDestroyOnLoad(gameObject);
+        }
     }
 }
