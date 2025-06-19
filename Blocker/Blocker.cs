@@ -1,28 +1,31 @@
 ﻿using System.Collections.Generic;
 
-public class Blocker
+namespace NTools
 {
-    private readonly Dictionary<object, ReasonData> blockerToReason = new();
-    public bool IsBlocked => blockerToReason.Count > 0;
-
-    public void AddBlocker (object blocker, string reason = null) => AddBlocker(blocker, new ReasonData(reason));
-
-    public void AddBlocker (object blocker, ReasonData reasonData = null)
+    public class Blocker
     {
-        reasonData ??= new ReasonData();
+        private readonly Dictionary<object, ReasonData> blockerToReason = new();
+        public bool IsBlocked => blockerToReason.Count > 0;
 
-        blockerToReason.TryAdd(blocker, reasonData);
-    }
+        public void AddBlocker (object blocker, string reason = null) => AddBlocker(blocker, new ReasonData(reason));
 
-    public void RemoveBlocker (object blocker)
-    {
-        blockerToReason.Remove(blocker);
-    }
+        public void AddBlocker (object blocker, ReasonData reasonData = null)
+        {
+            reasonData ??= new ReasonData();
 
-    public class ReasonData
-    {
-        public ReasonData() { }
-        public ReasonData (string reason) => Reason = reason;
-        public string Reason { get; set; } = "Not informed";
+            blockerToReason.TryAdd(blocker, reasonData);
+        }
+
+        public void RemoveBlocker (object blocker)
+        {
+            blockerToReason.Remove(blocker);
+        }
+
+        public class ReasonData
+        {
+            public ReasonData() { }
+            public ReasonData (string reason) => Reason = reason;
+            public string Reason { get; set; } = "Not informed";
+        }
     }
 }
