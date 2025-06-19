@@ -13,12 +13,12 @@ namespace NTools
         {
             get
             {
-                if (instance == null)
+                if (!instance)
                 {
                     var type = typeof(T);
                     var instances = Resources.LoadAll<T>(InstancePath);
                     instance = instances.FirstOrDefault();
-                    if (instance == null)
+                    if (!instance)
                     {
                         Debug.LogErrorFormat("[ScriptableSingleton] No instance of {0} found!", type);
                     }
