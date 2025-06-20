@@ -13,10 +13,15 @@ namespace NTools
         /// OBS: if you want to register an interface, remember to specify the interface in T
         ///     eg. ServiceLocator.Register<IInterface>(new InterfaceImplementation())
         /// </summary>
-        public static void Register<T> (T service) where T : class
+        public static void Register<T> (T service, Func<object> nullFactory = null) where T : class
         {
             var type = typeof(T);
             Services[type] = service;
+            
+            if (nullFactory is null)
+                return;
+            
+            NullFactory[type] = nullFactory;
         }
 
         public static T Resolve<T>() where T : class
