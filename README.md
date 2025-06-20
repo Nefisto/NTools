@@ -1,8 +1,8 @@
 ﻿# Summary
 
 - [Entry point](#EntryPoint)
-- [Service locator](#service-locator)
-- Blocker
+- [Service locator](#ServiceLocator)
+- [Blocker](#Blocker)
 - NTask
 - Useful components
 - Extensions
@@ -40,7 +40,7 @@ private async UniTask MyBattleRoutine()
 
 ​	With these events (`TakingDamageEntryPoint` and `TookDamageEntryPoint`) exposed, we can easily register to it and take control of how long the phase should run
 
-# Service locator
+# Service locator <a name="ServiceLocator">
 
   Simple way to get/set services and optionally adding null factories for services
 
@@ -94,7 +94,7 @@ public class RandomClassThatUseTheService : MonoBehaviour
 }
 ````
 
-# Blocker
+# Blocker <a name="Blocker">
 
   Basically a boolean on steroids, its common to have multiple behaviors blocking/unblocking something, so this blocker 
   allow us to "stack" reasons to block something. 
