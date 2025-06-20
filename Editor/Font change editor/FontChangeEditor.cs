@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿#if UNITY_EDITOR
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -39,3 +40,4 @@ namespace NTools
         }
     }
 }
+#endif
