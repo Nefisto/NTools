@@ -1,59 +1,125 @@
-﻿# ENTRY POINTS
+﻿# Summary
 
-​	It acts almost equal to an observer pattern, the only difference is that while the observers can't inject code into subject flow, as the subject just notify and go, here the observer will inject code to be executed by the subject before the flow on the subject keep going
+- [Entry point](#EntryPoint)
+- [Service locator](#service-locator)
+- Blocker
+- NTask
+- Useful components
+- Extensions
+
+# ENTRY POINTS ASYNC <a name="EntryPoint">
+
+​	Allow inject async code from external source and taking control of the flow. They are following observer terminology suggestion using caller and `EventArgs` as parameter
 
 ### WHY:
 
-* A lot of times I need to make an external routine to run before something happens on an already existing executing routine. **e.g.** an status effect feedback should run every time that it ticks before the battle continue
+* We commonly need to make an external routine to run before something happens on an already existing executing flow. **e.g.** an status effect feedback should run every time that it ticks before the battle continue
 
 ### **HOW  TO:**
 
 ​	You need to create the entry points on your flow. I'm simulating an snippet on some kind of turn based RPG where the context of current action is passed through the battle flow
 
 ```c#
-public class DamageContext : IEntryPointContext
+public class DamageContext : EventArgs
 {
     public int amount;
 }
 
-private EntryPoint takingDamageEntryPoint = new();
-private EntryPoint tookDamageEntryPoint = new();
+public EntryPointAsync TakingDamageEntryPoint { get; set; } = new();
+public EntryPointAsync TookDamageEntryPoint { get; set; } = new();
 
-private IEnumerator MyBattleRoutine()
+private async UniTask MyBattleRoutine()
 {
-    ...
-        var damageContext = new DamageContext() { amount = 1 };
-    
-        yield return takingDamageEntryPoint.Run(damageContext);
-        yield return targetOfSkill.TakeDamage(damageContext);
-        yield return tookDamageEntryPoint.Run(damageContext);
-    ...
+    var damageContext = new DamageContext() { amount = 1 };
+
+    await TakingDamageEntryPoint.InvokeAsync(this, damageContext);
+    // Take dame logic
+    await TookDamageEntryPoint.InvokeAsync(this, damageContext);
 }
 ```
 
-​	And now let's suppose that your external code want to do some interaction before the damage actually happen, something like a shield the will block all damage
+​	With these events (`TakingDamageEntryPoint` and `TookDamageEntryPoint`) exposed, we can easily register to it and take control of how long the phase should run
+
+# Service locator
+
+  Simple way to get/set services and optionally adding null factories for services
+
+````c#
+// This is optional, but it`s good for services that could scale or change at runtime.
+// This also good to have null objects that implements the interface.
+public interface ICustomService
+{
+    public void ServiceAPI();
+}
+
+public class ServiceImplementation : ICustomService
+{
+    public void ServiceAPI()
+    {
+        // Some logic
+    }
+}
+
+public class EmptyServiceImplementation : ICustomService
+{
+    public void ServiceAPI() { } // Do nothing
+}
+
+// Loading the service
+public class ServiceLoader : MonoBehaviour
+{
+    private void Awake()
+    {
+        ServiceLocator.Register(new ServiceImplementation()); // register as concrete class implementation
+        ServiceLocator.Register<ICustomService>(new ServiceImplementation()); // register as interface implementation
+        
+        // Optionally
+        // We can also register a null object implementation on register
+        ServiceLocator.Register(new ServiceImplementation(), () => new EmptyServiceImplementation());
+        // Or register the factory using their own api
+        ServiceLocator.RegisterFactory(() => new EmptyServiceImplementation());
+    }
+}
+
+// Retrieving the service
+public class RandomClassThatUseTheService : MonoBehaviour
+{
+    private void Start()
+    {
+        var customServiceInterface = ServiceLocator.Resolve<ICustomService>();
+        var customServiceConcrete = ServiceLocator.Resolve<ServiceImplementation>();
+        
+        customServiceInterface.ServiceAPI();
+    }
+}
+````
+
+# Blocker
+
+  Basically a boolean on steroids, its common to have multiple behaviors blocking/unblocking something, so this blocker 
+  allow us to "stack" reasons to block something. 
+e.g. Pause/Resume should disable/enable player movement but also an Stop effect should disable/enable movement when casted,
+in this case if we unpause during the stop, it will enable the movement even while affected by stop magic. 
 
 ```c#
-public class MyShieldSkill
+public Blocker movementBlock;
+
+// In some pause controller
+public void Pause() => movementBlock.AddBlocker(this, "Pause");
+public void Resume() => movementBlock.RemoveBlocker(this);
+
+// In some effect controller
+public void ApplyStopEffect() => movementBlock.AddBlocker(this, "Stop effect");
+public void RemoveStopEffect() => movementBlock.RemoveBlocker(this);
+
+// In this case the move will happen indepent of the order that blocker are added, we can also retrieve the 
+// "reason" that is blocking the behavior to happen
+public void Move()
 {
-    // A base method that will be called when the skill is used
-    public void Register()
-    {
-        var battleManager = ServiceLocator.BattleManager; // Or any other way to get a reference to the battle manager
-
-        battleManager.takingDamageEntryPoint.Add(ShieldBehavior);
-    }
-
-    private IEnumerator ShieldBehavior(IEntryPointContext ctx)
-    {
-        // As I know that this will be registered just before the damage calculation, I can safely cast it to the properly type
-        var damageContext = (DamageContext)ctx;
-
-        damageContext.amount = 0;
-
-        // We can also run it in parallel using StartCoroutine() to avoid blocking the flow during the animation
-        yield return SomeShieldAnimation();
-    }
+    if (movementBlock.IsBlocked)
+        return;
+    
+    // Move
 }
 ```
 
