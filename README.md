@@ -1,4 +1,4 @@
-﻿# Summary
+﻿# Summary <a name="TOC">
 
 - [Entry point](#EntryPoint)
 - [Service locator](#ServiceLocator)
@@ -7,7 +7,7 @@
 - Useful components
 - Extensions
 
-# ENTRY POINTS ASYNC <a name="EntryPoint">
+# [ENTRY POINTS ASYNC](#TOC) <a name="EntryPoint">
 
 ​	Allow inject async code from external source and taking control of the flow. They are following observer terminology suggestion using caller and `EventArgs` as parameter
 
@@ -40,7 +40,7 @@ private async UniTask MyBattleRoutine()
 
 ​	With these events (`TakingDamageEntryPoint` and `TookDamageEntryPoint`) exposed, we can easily register to it and take control of how long the phase should run
 
-# Service locator <a name="ServiceLocator">
+# [Service locator](#TOC) <a name="ServiceLocator">
 
   Simple way to get/set services and optionally adding null factories for services
 
@@ -94,7 +94,7 @@ public class RandomClassThatUseTheService : MonoBehaviour
 }
 ````
 
-# Blocker <a name="Blocker">
+# [Blocker](#TOC) <a name="Blocker">
 
   Basically a boolean on steroids, its common to have multiple behaviors blocking/unblocking something, so this blocker 
   allow us to "stack" reasons to block something. 
