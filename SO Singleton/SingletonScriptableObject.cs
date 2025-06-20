@@ -13,20 +13,16 @@ namespace NTools
         {
             get
             {
+                if (instance)
+                    return instance;
+
+                var type = typeof(T);
+                var instances = Resources.LoadAll<T>(InstancePath);
+                instance = instances.FirstOrDefault();
                 if (!instance)
-                {
-                    var type = typeof(T);
-                    var instances = Resources.LoadAll<T>(InstancePath);
-                    instance = instances.FirstOrDefault();
-                    if (!instance)
-                    {
-                        Debug.LogErrorFormat("[ScriptableSingleton] No instance of {0} found!", type);
-                    }
-                    else if (instances.Length > 1)
-                    {
-                        Debug.LogErrorFormat("[ScriptableSingleton] Multiple instances of {0} found!", type);
-                    }
-                }
+                    Debug.LogErrorFormat("[ScriptableSingleton] No instance of {0} found!", type);
+                else if (instances.Length > 1)
+                    Debug.LogErrorFormat("[ScriptableSingleton] Multiple instances of {0} found!", type);
 
                 return instance;
             }

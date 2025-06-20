@@ -11,7 +11,7 @@ namespace NTools
 
         public static TaskState CreateTask (IEnumerator routine)
         {
-            if (singleton != null)
+            if (singleton)
                 return new TaskState(routine);
 
             singleton = new GameObject("Task manager").AddComponent<NTaskManager>();
