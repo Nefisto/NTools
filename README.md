@@ -3,9 +3,17 @@
 - [Entry point](#EntryPoint)
 - [Service locator](#ServiceLocator)
 - [Blocker](#Blocker)
+- NDictionary
 - NTask
-- Useful components
+- [Custom yield](#CustomYield)
+- [Singleton ScriptableObject](#SingletonSO)
+- [Fade screen service](#FadeScreen)
+- [Utils](#Utils)
 - Extensions
+- Interfaces
+- Components
+- Prefabs
+- [Editor tools](#EditorTools)
 
 # [ENTRY POINTS ASYNC](#TOC) <a name="EntryPoint">
 
@@ -101,27 +109,40 @@ public class RandomClassThatUseTheService : MonoBehaviour
 e.g. Pause/Resume should disable/enable player movement but also an Stop effect should disable/enable movement when casted,
 in this case if we unpause during the stop, it will enable the movement even while affected by stop magic. 
 
+​	Each *owner* (the object passed as first argument) can stack multiple *reasons*, so the same owner can block for more than one motive at the same time. Adding the same `(owner, reason)` twice is treated as a logic error and logs an error, since it should never happen.
+
 ```c#
 public Blocker movementBlock;
 
 // In some pause controller
 public void Pause() => movementBlock.AddBlocker(this, "Pause");
-public void Resume() => movementBlock.RemoveBlocker(this);
+public void Resume() => movementBlock.RemoveBlocker(this, "Pause");
 
-// In some effect controller
+// In some effect controller, the same owner can stack more than one reason
 public void ApplyStopEffect() => movementBlock.AddBlocker(this, "Stop effect");
-public void RemoveStopEffect() => movementBlock.RemoveBlocker(this);
+public void ApplyRootEffect() => movementBlock.AddBlocker(this, "Root effect");
+public void RemoveStopEffect() => movementBlock.RemoveBlocker(this, "Stop effect"); // removes only this reason
+public void ClearAllEffects() => movementBlock.RemoveBlocker(this);                 // removes every reason of this owner
 
 // In this case the move will happen indepent of the order that blocker are added, we can also retrieve the 
-// "reason" that is blocking the behavior to happen
+// "reasons" that are blocking the behavior to happen
 public void Move()
 {
     if (movementBlock.IsBlocked)
+    {
+        // GetBlockers() returns every ReasonData blocking, GetBlockers(owner) only the ones of that owner
+        foreach (var reason in movementBlock.GetBlockers())
+            Debug.Log(reason); // ReasonData converts implicitly to string, printing its Reason
+        
         return;
+    }
     
     // Move
 }
 ```
+
+* `RemoveBlocker(owner, reason)` removes a single reason, `RemoveBlocker(owner)` clears every reason of that owner at once (handy on scene changes)
+* `ReasonData` currently only holds a `Reason` string (and converts implicitly to it), but exists as a class so it can carry more data later
 
 # NDictionary
 
@@ -271,14 +292,160 @@ private IEnumerator WeCanYieldForTask()
 * Calling a `WaitForEndOfFrame` breaks the task, without any warning, it simple stop there
 
 
+# [Custom yield](#TOC) <a name="CustomYield">
+
+​	`WaitForSecondsActioningUntil` works like `WaitForSeconds` but invokes a callback every frame with the elapsed time until it completes, useful to drive progress feedback while waiting
+
+```c#
+// Waits 3 seconds while reporting how much time has passed each frame
+yield return new WaitForSecondsActioningUntil(3f, elapsed => progressBar.fillAmount = elapsed / 3f);
+```
+
+# [Singleton ScriptableObject](#TOC) <a name="SingletonSO">
+
+​	Base class to turn a `ScriptableObject` into a singleton loaded from `Resources`. Set `InstancePath` to the folder inside a `Resources` folder and access it through `Instance`. It logs an error if none or multiple instances are found
+
+```c#
+public class GameConfig : SingletonScriptableObject<GameConfig>
+{
+    public int startingLives;
+}
+
+// Anywhere
+var lives = GameConfig.Instance.startingLives;
+```
+
+# [Fade screen service](#TOC) <a name="FadeScreen">
+
+  Simple async service to fade an UI `Image` in and out
+
+### REQUIREMENTS:
+
+* UniTask package
+
+```c#
+var fade = new FadeScreenService(new FadeScreenService.Settings
+{
+    FadeImage = myImage,
+    FadeDuration = 0.5f,
+    Color = Color.black
+});
+
+await fade.FadeInAsync();  // goes to full alpha and starts blocking raycasts
+await fade.FadeOutAsync(); // goes to zero alpha and releases raycasts
+```
+
+* You can pass a per-call `Settings` to `FadeInAsync`/`FadeOutAsync` to override the default one
+
+# [Utils](#TOC) <a name="Utils">
+
+## GetEnumNames\<T>()
+  Returns the names of an enum as a `List<string>`, useful for populating dropdowns
+
+```c#
+var names = Utils.GetEnumNames<MyEnum>();
+```
+
 # Extensions
 
 ## Transform
 ### DestroyChildren()
-  Destroy all children from current transform
+  Destroy all children GameObjects from current transform
+### DisableChildren()
+  Set all children GameObjects inactive
+
+## RectTransform
+### GetSizeBetweenAnchor()
+  Returns the size between the anchors
 
 ## Float
 ### SeparateIntegerAndFractionPart()
+  Splits the value into its `(int integer, float fraction)` parts
+### IsNearlyEnoughTo(float other, float epsilon = 0.001f)
+  True if both values differ by less than `epsilon`
+
+## String
+### SeparateWordsByCase()
+  Inserts spaces at camelCase boundaries and replaces underscores with spaces (e.g. `"myValue_here"` -> `"my Value here"`)
+
+## Color
+### SetAlpha(float targetAlpha)
+  Returns the color with its alpha replaced (returns a `Color32`)
+### CompareWithoutAlpha(Color other)
+  True if the RGB channels match (alpha ignored)
+
+## Vector2
+### GetRandom()
+  Random value between `x` and `y` (treats the vector as a min/max range)
+### ToVector2Int()
+  Rounds each component to the nearest int
+### ToDegreeAngle()
+  Angle of the vector in degrees
+### IsNearlyEnoughTo(Vector2 other)
+  True if both components are nearly equal
+
+## Vector2Int
+### ToDegreeAngle()
+  Angle of the vector in degrees
+### ToVector3()
+  Converts to `Vector3` with `z = 0`
+### ToVector2()
+  Converts to `Vector2`
+
+## Vector3
+### IgnoreY()
+  Returns the vector with `y` zeroed
+### RoundToInt()
+  Rounds all components to the nearest int
+### RoundToVector2Int()
+  Rounds `x` and `y` to ints (drops z)
+
+## Texture2D
+### ToSprite()
+  Creates a full-size sprite from the texture
+### TrimTransparentPixels()
+  Returns a new texture cropped to the smallest rect containing all non-transparent pixels
+### SaveTextureToFile(string filePath, bool overwrite = false, bool usePngFormat = true)
+  Encodes (PNG or JPG) and writes to a file — **requires UniTask**
+### SaveToProjectFolder(string relativePath, bool overwrite = false, bool usePngFormat = true)
+  Saves the texture under an `Assets/`-relative path, creating folders and refreshing the AssetDatabase — **requires UniTask**
+
+## Animator
+### WaitForCurrentAnimationToCompleteAsync(int layerIndex)
+  Awaits until the current state on the layer finished playing — **requires UniTask**
+
+## BoxCollider
+### RandomizePosition()
+  Returns a random world-space point inside the collider's bounds
+
+## IList
+### IsEmpty()
+  True when `Count` is 0
+
+## IEnumerable
+### GetRandom()
+  Returns one random element (or default if empty)
+### GetRandom(int count)
+  Returns `count` random elements
+### Shuffle()
+  Returns the sequence in randomized order
+### ForEach(Action<T> action) / ForEach(Action<T, int> action)
+  Runs the action on each item (optionally with its index) and returns the source
+### Distinct(Func<T, T, bool> equalityPredicate, Func<T, int> getHashMethod = null)
+  Distinct using a custom equality predicate (and optional hash function)
+### ToNDictionary(keySelector, elementSelector)
+  Builds an `NDictionary` from the sequence
+
+## GenericComparer\<T>
+  `IEqualityComparer<T>` that wraps a custom equality predicate and hash function, handy for the LINQ overloads that ask for one
+
+## GetComponent helpers
+  Component lookups that let you control whether to include the object itself (`Self.Include/Exclude`) and inactive objects (`Inactive.Include/Exclude`)
+
+### NGetComponentInChildren\<T>(Self self, Inactive inactive) / NGetComponentsInChildren\<T>(Self self)
+  Get one/all components of type `T` in children (inactive inclusion auto-picked from active state when the `Inactive` argument is omitted)
+### GetComponentInParents\<T>(Self self, Inactive inactive) / TryGetComponentInParents\<T>(Self self, out T found)
+  Get (or try-get) a component of type `T` walking up the parents
 
 # Interfaces
 
@@ -297,22 +464,21 @@ public Transform Transform => (this as MonoBehaviour)?.transform;
 ## ResetRectTransformAtAwake
   Useful to separate HUDs outside game
 
+## DoNotDestroyOnLoad
+  Unparents the game object and keeps it alive across scene loads
+
+## Information
+  Lets you write a note on the inspector to document a game object
+
 # Prefabs
 ## [Debug] HUD Background
   Used for organizations only, used to achieve things like this
   !([https://imgur.com/a/WQr9KXs])
 
-TODO FEAT:
+# [Editor tools](#TOC) <a name="EditorTools">
 
-- UI Stack
-- UI lib
-- Pooler
+## Version increment
+  Menu items under `Tools/NTools/Version` to bump the project's bundle version (Patch/Minor/Major)
 
-TODO DOC:
-
-- NTask
-    - ??Delay begin??
-    - Beggining on next frame??
-- Fix MyDebug
-- Blocker
-- ServiceLocator
+## Font changer
+  Window under `Tools/NTools/Font Changer` to apply a `TMP_FontAsset` to every TextMeshPro text in the open scene
