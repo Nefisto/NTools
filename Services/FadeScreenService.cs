@@ -5,15 +5,15 @@ using UnityEngine.UI;
 
 namespace NTools
 {
-    public class FadeScreenService
+    public class FadeScreenService : IFadeScreenService
     {
-        private readonly Settings settings;
+        private readonly IFadeScreenService.Settings settings;
 
-        public FadeScreenService (Settings settings) => this.settings = settings;
+        public FadeScreenService (IFadeScreenService.Settings settings) => this.settings = settings;
 
-        public async UniTask FadeInAsync (Settings settings = null)
+        public async UniTask FadeInAsync (IFadeScreenService.Settings settings = null)
         {
-            settings ??= new Settings();
+            settings ??= new IFadeScreenService.Settings();
             settings.FadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, settings.FadeImage.color.a);
             settings.FadeImage.raycastTarget = true;
 
@@ -36,9 +36,9 @@ namespace NTools
             settings.FadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, 1f);
         }
 
-        public async UniTask FadeOutAsync (Settings settings = null)
+        public async UniTask FadeOutAsync (IFadeScreenService.Settings settings = null)
         {
-            settings ??= new Settings();
+            settings ??= new IFadeScreenService.Settings();
             settings.FadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, settings.FadeImage.color.a);
 
             if (Mathf.Approximately(settings.FadeImage.color.a, 0))
@@ -59,19 +59,6 @@ namespace NTools
 
             settings.FadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, 0f);
             settings.FadeImage.raycastTarget = false;
-        }
-
-        [Serializable]
-        public class Settings
-        {
-            [field: SerializeField]
-            public Image FadeImage { get; set; }
-
-            [field: SerializeField]
-            public float FadeDuration { get; set; } = 1f;
-
-            [field: SerializeField]
-            public Color Color { get; set; } = Color.black;
         }
     }
 }
