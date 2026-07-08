@@ -8,6 +8,7 @@
 - [Custom yield](#CustomYield)
 - [Singleton ScriptableObject](#SingletonSO)
 - [Fade screen service](#FadeScreen)
+- [UI stack service](#UIStack)
 - [Utils](#Utils)
 - Extensions
 - Interfaces
@@ -336,6 +337,40 @@ await fade.FadeOutAsync(); // goes to zero alpha and releases raycasts
 ```
 
 * You can pass a per-call `Settings` to `FadeInAsync`/`FadeOutAsync` to override the default one
+
+# [UI stack service](#TOC) <a name="UIStack">
+
+  Async stack of screens. `Push` opens a screen on top of the others; the ones underneath stay visible but have their input blocked until they become the top again. `Pop` closes the top screen and re-enables the one revealed beneath it.
+
+### REQUIREMENTS:
+
+* UniTask package
+
+​	Screens implement `IUIScreen`, which requires `IMonobehavior` (so it must live on a `MonoBehaviour`) and exposes the async open/close:
+
+```c#
+public class MyScreen : MonoBehaviour, IUIScreen
+{
+    public async UniTask OpenAsync()  { /* fade / slide in  */ }
+    public async UniTask CloseAsync() { /* fade / slide out */ }
+}
+```
+
+​	Then drive them through the service:
+
+```c#
+var ui = new UIStackService();
+
+var settings = await ui.PushAsync(settingsScreen); // opens on top, returns the pushed screen
+await ui.PushAsync(confirmPopup);                  // stacks another and blocks input on settingsScreen
+await ui.PopAsync();                               // closes confirmPopup, re-enables settingsScreen
+await ui.PopAllAsync();                            // closes everything from the top down
+```
+
+* Input blocking is automatic: while a screen is covered the service flips `blocksRaycasts` on a `CanvasGroup` at the screen's root (adding one if missing), so there's no need to position a full-screen [Blocker](#Blocker) object on the canvas. Because it reaches the screen through its own `Transform`, `IUIScreen` extends `IMonobehavior`
+* `Current` is the top screen (or `null`) and `Count` is the stack size
+* `NullUIStackService` is a do-nothing implementation for the [service locator](#ServiceLocator) null-object pattern
+* There's a runtime-built sample under `_Samples/UI Stack` — open the scene and press Play to see the stacking and input blocking in action
 
 # [Utils](#TOC) <a name="Utils">
 
