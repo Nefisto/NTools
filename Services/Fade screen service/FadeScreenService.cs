@@ -13,7 +13,7 @@ namespace NTools
 
         public async UniTask FadeInAsync (IFadeScreenService.Settings settings = null)
         {
-            settings ??= new IFadeScreenService.Settings();
+            settings ??= this.settings;
             settings.FadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, settings.FadeImage.color.a);
             settings.FadeImage.raycastTarget = true;
 
@@ -38,7 +38,7 @@ namespace NTools
 
         public async UniTask FadeOutAsync (IFadeScreenService.Settings settings = null)
         {
-            settings ??= new IFadeScreenService.Settings();
+            settings ??= this.settings;
             settings.FadeImage.color = new Color(settings.Color.r, settings.Color.g, settings.Color.b, settings.FadeImage.color.a);
 
             if (Mathf.Approximately(settings.FadeImage.color.a, 0))
