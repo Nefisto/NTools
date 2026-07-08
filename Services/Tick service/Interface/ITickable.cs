@@ -1,4 +1,7 @@
-﻿public interface ITickable
+namespace NTools
 {
-    public void Tick();
+    public interface ITickable
+    {
+        public void Tick();
+    }
 }

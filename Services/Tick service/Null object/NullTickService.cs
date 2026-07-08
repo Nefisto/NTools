@@ -1,8 +1,11 @@
-﻿public class NullTickService : ITickService
+namespace NTools
 {
-    public void Register (ITickable tickable) { }
+    public class NullTickService : ITickService
+    {
+        public void Register (ITickable tickable) { }
 
-    public void Unregister (ITickable tickable) { }
+        public void Unregister (ITickable tickable) { }
 
-    public void Tick() { }
+        public void Tick() { }
+    }
 }

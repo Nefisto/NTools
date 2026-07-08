@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public class TestComponent : MonoBehaviour
+namespace NTools
 {
-    
+    public class TestComponent : MonoBehaviour
+    {
+
+    }
 }

@@ -1,6 +1,9 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public interface IMonobehavior
+namespace NTools
 {
-    public Transform Transform => (this as MonoBehaviour)?.transform;
+    public interface IMonobehavior
+    {
+        public Transform Transform => (this as MonoBehaviour)?.transform;
+    }
 }

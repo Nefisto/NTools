@@ -1,19 +1,21 @@
-﻿using System;
 using TMPro;
 using UnityEngine;
 
-public class ScreenCounter : MonoBehaviour
+namespace NTools
 {
-    public TMP_Text layerACounter;
-    public TMP_Text layerBCounter;
-    public TMP_Text layerCCounter;
-
-    private void Awake()
+    public class ScreenCounter : MonoBehaviour
     {
-        NTaskSample.OnUpdatedLayerA += number => UpdateNumber(number, layerACounter);
-        NTaskSample.OnUpdatedLayerB += number => UpdateNumber(number, layerBCounter);
-        NTaskSample.OnUpdatedLayerC += number => UpdateNumber(number, layerCCounter);
-    }
+        public TMP_Text layerACounter;
+        public TMP_Text layerBCounter;
+        public TMP_Text layerCCounter;
 
-    private void UpdateNumber (int number, TMP_Text layer) => layer.text = $"{number}";
+        private void Awake()
+        {
+            NTaskSample.OnUpdatedLayerA += number => UpdateNumber(number, layerACounter);
+            NTaskSample.OnUpdatedLayerB += number => UpdateNumber(number, layerBCounter);
+            NTaskSample.OnUpdatedLayerC += number => UpdateNumber(number, layerCCounter);
+        }
+
+        private void UpdateNumber (int number, TMP_Text layer) => layer.text = $"{number}";
+    }
 }

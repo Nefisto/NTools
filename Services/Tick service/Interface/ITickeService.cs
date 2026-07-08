@@ -1,6 +1,9 @@
-﻿public interface ITickService
+namespace NTools
 {
-    public void Register (ITickable tickable);
-    public void Unregister (ITickable tickable);
-    public void Tick();
+    public interface ITickService
+    {
+        public void Register (ITickable tickable);
+        public void Unregister (ITickable tickable);
+        public void Tick();
+    }
 }

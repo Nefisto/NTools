@@ -1,65 +1,67 @@
-﻿using System;
+using System;
 using System.Collections;
-using NTools;
 using UnityEngine;
 
-public class NTaskSample : MonoBehaviour
+namespace NTools
 {
-    public static event Action<int> OnUpdatedLayerA;
-    public static event Action<int> OnUpdatedLayerB;
-    public static event Action<int> OnUpdatedLayerC;
-
-    private NTask counterTask;
-    
-    public void Start()
+    public class NTaskSample : MonoBehaviour
     {
-        counterTask?.Stop();
-        counterTask = new NTask(LayerARoutine());
-    }
+        public static event Action<int> OnUpdatedLayerA;
+        public static event Action<int> OnUpdatedLayerB;
+        public static event Action<int> OnUpdatedLayerC;
 
-    public void StartTask() => counterTask.Resume(); 
-    
-    public void Pause() => counterTask.Pause();
+        private NTask counterTask;
 
-    public void Resume() => counterTask.Resume();
-
-    public void MoveOneStep() => counterTask.MoveNext();
-
-    private static IEnumerator LayerARoutine()
-    {
-        var number = 0;
-        while (true)
+        public void Start()
         {
-            OnUpdatedLayerA?.Invoke(number);
-            yield return new WaitForSeconds(.5f);
-            yield return LayerBRoutine();
-
-            number++;
+            counterTask?.Stop();
+            counterTask = new NTask(LayerARoutine());
         }
-    }
 
-    private static IEnumerator LayerBRoutine()
-    {
-        var number = 0;
-        while (number < 4)
+        public void StartTask() => counterTask.Resume();
+
+        public void Pause() => counterTask.Pause();
+
+        public void Resume() => counterTask.Resume();
+
+        public void MoveOneStep() => counterTask.MoveNext();
+
+        private static IEnumerator LayerARoutine()
         {
-            OnUpdatedLayerB?.Invoke(number);
-            yield return new WaitForSeconds(.5f);
-            yield return LayerCRoutine();
-            
-            number++;
+            var number = 0;
+            while (true)
+            {
+                OnUpdatedLayerA?.Invoke(number);
+                yield return new WaitForSeconds(.5f);
+                yield return LayerBRoutine();
+
+                number++;
+            }
         }
-    }
 
-    private static IEnumerator LayerCRoutine()
-    {
-        var number = 0;
-        while (number < 6)
+        private static IEnumerator LayerBRoutine()
         {
-            OnUpdatedLayerC?.Invoke(number);
-            yield return new WaitForSeconds(.5f);
+            var number = 0;
+            while (number < 4)
+            {
+                OnUpdatedLayerB?.Invoke(number);
+                yield return new WaitForSeconds(.5f);
+                yield return LayerCRoutine();
 
-            number++;
+                number++;
+            }
+        }
+
+        private static IEnumerator LayerCRoutine()
+        {
+            var number = 0;
+            while (number < 6)
+            {
+                OnUpdatedLayerC?.Invoke(number);
+                yield return new WaitForSeconds(.5f);
+
+                number++;
+            }
         }
     }
 }
